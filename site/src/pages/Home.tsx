@@ -8,8 +8,8 @@ import PropertyCard from '@/components/PropertyCard';
 import { properties, villes } from '@/data/properties';
 import { motion } from 'framer-motion';
 
-const HERO_IMG = 'https://images.fillout.com/772872/qtlj8gyrrh/generated-images/xev8c3nng9ZsAvinzCQKbc/img_sVGHGpaJjVXfVAnu.jpg';
-const BRICKS_IMG = 'https://images.fillout.com/772872/qtlj8gyrrh/generated-images/vpHs7Tzoq6pkSKxTgu8cvr/img_HNefGSjDSpAFbKlF.jpg';
+const HERO_IMG = '/images/hero-terrain.webp';
+const BRICKS_IMG = '/images/briques.webp';
 
 export default function Home() {
   return (
@@ -59,7 +59,7 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
 function HeroSection() {
   return (
     <section className="relative w-full min-h-screen flex flex-col">
-      <img src={HERO_IMG} className="absolute inset-0 w-full h-full object-cover" alt="Terrain en Côte d'Ivoire" />
+      <img src={HERO_IMG} width={1632} height={912} fetchPriority="high" className="absolute inset-0 w-full h-full object-cover" alt="Terrain en Côte d'Ivoire" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
 
       <div className="relative flex-1 flex flex-col justify-end px-4 md:px-12 pb-0 max-w-7xl mx-auto w-full">
@@ -81,7 +81,7 @@ function HeroSection() {
             <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-8 text-sm uppercase tracking-wider font-semibold">
               <Link to="/biens"><ArrowUpRight className="mr-2 h-4 w-4" /> Voir nos biens</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10 hover:text-white rounded-full px-8 text-sm uppercase tracking-wider">
+            <Button asChild variant="outline" size="lg" className="bg-transparent border-white/40 text-white hover:bg-white/10 hover:text-white rounded-full px-8 text-sm uppercase tracking-wider">
               <a href="https://wa.me/2250704085000" target="_blank" rel="noopener noreferrer">
                 <MessageCircle className="mr-2 h-4 w-4" /> Parler à un conseiller
               </a>
@@ -238,7 +238,7 @@ function WhyUsSection() {
           </ul>
         </div>
         <div className="rounded-2xl overflow-hidden shadow-2xl">
-          <img src={BRICKS_IMG} alt="Briques industrielles" className="w-full h-full object-cover aspect-[4/3]" />
+          <img src={BRICKS_IMG} alt="Briques industrielles" width={1152} height={896} loading="lazy" className="w-full h-full object-cover aspect-[4/3]" />
         </div>
       </div>
     </section>
@@ -300,7 +300,7 @@ function CTASection() {
           <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-8 uppercase tracking-wider text-sm font-semibold">
             <Link to="/contact">Contactez-nous maintenant</Link>
           </Button>
-          <Button asChild size="lg" variant="outline" className="border-white/30 text-primary-foreground hover:bg-white/10 hover:text-primary-foreground rounded-full px-8 uppercase tracking-wider text-sm">
+          <Button asChild size="lg" variant="outline" className="bg-transparent border-white/40 text-primary-foreground hover:bg-white/10 hover:text-primary-foreground rounded-full px-8 uppercase tracking-wider text-sm">
             <a href="https://wa.me/2250704085000" target="_blank" rel="noopener noreferrer">
               <MessageCircle className="mr-2 h-4 w-4" /> WhatsApp
             </a>

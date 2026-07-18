@@ -30,11 +30,22 @@ export default function ContactForm({ defaultMessage = '', showTypeProjet = fals
       return;
     }
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      toast.success('Votre demande a bien été envoyée ! Nous vous recontacterons rapidement.');
-      setForm({ nom: '', telephone: '', email: '', typeProjet: '', message: '' });
-    }, 1000);
+
+    // Transmission via WhatsApp : le message arrive directement sur le numéro de l'agence.
+    const lignes = [
+      'Bonjour, je vous contacte depuis le site Ivoire Challenge Corporation.',
+      `Nom : ${form.nom.trim()}`,
+      `Téléphone : ${form.telephone.trim()}`,
+      form.email.trim() && `Email : ${form.email.trim()}`,
+      form.typeProjet && `Type de projet : ${form.typeProjet}`,
+      form.message.trim() && `Message : ${form.message.trim()}`,
+    ].filter(Boolean);
+
+    window.open(`https://wa.me/2250704085000?text=${encodeURIComponent(lignes.join('\n'))}`, '_blank', 'noopener,noreferrer');
+
+    setLoading(false);
+    toast.success('Votre message est prêt dans WhatsApp — appuyez sur Envoyer pour nous le transmettre.');
+    setForm({ nom: '', telephone: '', email: '', typeProjet: '', message: '' });
   };
 
   return (

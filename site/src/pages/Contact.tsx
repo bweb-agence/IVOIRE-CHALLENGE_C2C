@@ -1,14 +1,14 @@
 import { Phone, Mail, MapPin, MessageCircle, Clock } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
 
-const HERO_IMG = 'https://images.fillout.com/772872/qtlj8gyrrh/generated-images/xev8c3nng9ZsAvinzCQKbc/img_sVGHGpaJjVXfVAnu.jpg';
+const HERO_IMG = '/images/hero-terrain.webp';
 
 export default function Contact() {
   return (
     <div>
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[400px]">
-        <img src={HERO_IMG} className="absolute inset-0 w-full h-full object-cover" alt="" />
+        <img src={HERO_IMG} width={1632} height={912} className="absolute inset-0 w-full h-full object-cover" alt="" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
         <div className="relative h-full flex flex-col justify-end px-4 md:px-12 pb-12 max-w-7xl mx-auto">
           <p className="text-xs uppercase tracking-[0.2em] text-accent font-semibold mb-3">Contact</p>

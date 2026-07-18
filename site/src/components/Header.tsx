@@ -3,7 +3,8 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const LOGO_URL = 'https://images.fillout.com/orgid-772872/flowpublicid-account/widgetid-branding-kit-wizard-logo/wzdRwGMZi7cDioy1wJAgd3/Capture-daeIcran-2026-07-17-aI-14.18.52.png';
+const LOGO = '/images/logo.png';
+const LOGO_BLANC = '/images/logo-blanc.png';
 
 const navLinks = [
   { label: 'Accueil', to: '/' },
@@ -25,9 +26,19 @@ export default function Header() {
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-background/95 backdrop-blur-md shadow-sm border-b border-border' : 'bg-transparent'}`}>
-      <div className="container mx-auto flex h-20 items-center justify-between px-4 lg:px-8">
+      {/* Voile sombre garantissant la lisibilité du menu blanc sur les heros clairs */}
+      {!scrolled && (
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/80 via-black/50 to-transparent" aria-hidden="true" />
+      )}
+      <div className="relative container mx-auto flex h-20 items-center justify-between px-4 lg:px-8">
         <Link to="/" className="flex-shrink-0">
-          <img src={LOGO_URL} alt="Ivoire Challenge Corporation" className="h-10" />
+          <img
+            src={scrolled ? LOGO : LOGO_BLANC}
+            alt="Ivoire Challenge Corporation"
+            width={176}
+            height={165}
+            className="h-11 w-auto"
+          />
         </Link>
 
         {/* Desktop nav */}

@@ -34,7 +34,7 @@ export const properties: Property[] = [
     modalitesPaiement: 'Comptant ou échelonné sur 6 mois',
     siteApprouve: true,
     aLaUne: true,
-    photos: ['https://images.fillout.com/772872/qtlj8gyrrh/generated-images/vxveZ9EwDv4Stm7oLcyeX5/img_XGO-eoIg5Ufdv24n.jpg'],
+    photos: ['/images/terrain-azaguie.webp'],
   },
   {
     id: '2',
@@ -52,7 +52,7 @@ export const properties: Property[] = [
     modalitesPaiement: 'Comptant ou échelonné sur 12 mois',
     siteApprouve: true,
     aLaUne: true,
-    photos: ['https://images.fillout.com/772872/qtlj8gyrrh/generated-images/rmaE8pfRc9VYG1D2Xozpf9/img_UHeb8Gu1I5BlDlrx.jpg'],
+    photos: ['/images/terrain-angre.webp'],
   },
   {
     id: '3',
@@ -70,7 +70,7 @@ export const properties: Property[] = [
     modalitesPaiement: 'Comptant',
     siteApprouve: true,
     aLaUne: true,
-    photos: ['https://images.fillout.com/772872/qtlj8gyrrh/generated-images/67XRepFwFYgE2gvVzy3XKq/img_4AVnEjMt7tmUazwG.jpg'],
+    photos: ['/images/villa-cocody.webp'],
   },
   {
     id: '4',
@@ -88,7 +88,7 @@ export const properties: Property[] = [
     modalitesPaiement: 'Comptant ou échelonné sur 6 mois',
     siteApprouve: true,
     aLaUne: false,
-    photos: ['https://images.fillout.com/772872/qtlj8gyrrh/generated-images/r2SMgwTbEofqJT2UntS3hx/img_CtRaduZU84bnhinz.jpg'],
+    photos: ['/images/terrain-bingerville.webp'],
   },
   {
     id: '5',
@@ -106,7 +106,7 @@ export const properties: Property[] = [
     modalitesPaiement: 'Comptant',
     siteApprouve: true,
     aLaUne: false,
-    photos: ['https://images.fillout.com/772872/qtlj8gyrrh/generated-images/raDoZadwVVg1jByFHyhGu6/img_BAWV1yhXlrdcv-6N.jpg'],
+    photos: ['/images/maison-yopougon.webp'],
   },
   {
     id: '6',
@@ -124,7 +124,7 @@ export const properties: Property[] = [
     modalitesPaiement: 'Comptant ou échelonné sur 8 mois',
     siteApprouve: true,
     aLaUne: false,
-    photos: ['https://images.fillout.com/772872/qtlj8gyrrh/generated-images/vxveZ9EwDv4Stm7oLcyeX5/img_XGO-eoIg5Ufdv24n.jpg'],
+    photos: ['/images/terrain-azaguie.webp'],
   },
 ];
 

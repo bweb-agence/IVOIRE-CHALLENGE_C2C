@@ -2,7 +2,7 @@ import { ShieldCheck, Eye, Wallet, Heart, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
-const HERO_IMG = 'https://images.fillout.com/772872/qtlj8gyrrh/generated-images/vpHs7Tzoq6pkSKxTgu8cvr/img_HNefGSjDSpAFbKlF.jpg';
+const HERO_IMG = '/images/briques.webp';
 
 const values = [
   { icon: Eye, title: 'Transparence', desc: 'Des conditions claires, sans frais cachés.' },
@@ -22,7 +22,7 @@ export default function About() {
     <div>
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[400px]">
-        <img src={HERO_IMG} className="absolute inset-0 w-full h-full object-cover" alt="" />
+        <img src={HERO_IMG} width={1152} height={896} className="absolute inset-0 w-full h-full object-cover" alt="" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
         <div className="relative h-full flex flex-col justify-end px-4 md:px-12 pb-12 max-w-7xl mx-auto">
           <p className="text-xs uppercase tracking-[0.2em] text-accent font-semibold mb-3">À propos</p>

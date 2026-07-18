@@ -5,3 +5,6 @@ dist-ssr
 *.tsbuildinfo
 .env
 .env.*
+
+# Config locale Claude Code
+.claude/

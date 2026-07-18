@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, MessageCircle } from 'lucide-react';
 
-const LOGO_URL = 'https://images.fillout.com/orgid-772872/flowpublicid-account/widgetid-branding-kit-wizard-logo/wzdRwGMZi7cDioy1wJAgd3/Capture-daeIcran-2026-07-17-aI-14.18.52.png';
+const LOGO_BLANC = '/images/logo-blanc.png';
 
 export default function Footer() {
   return (
@@ -16,7 +16,7 @@ export default function Footer() {
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {/* Col 1 */}
             <div>
-              <img src={LOGO_URL} alt="2C" className="h-10 mb-5 brightness-0 invert" />
+              <img src={LOGO_BLANC} alt="Ivoire Challenge Corporation" width={176} height={165} loading="lazy" className="h-12 w-auto mb-5" />
               <p className="text-sm text-primary-foreground/60 leading-relaxed">
                 Ivoire Challenge Corporation — De locataire à propriétaire, sans se ruiner.
               </p>
