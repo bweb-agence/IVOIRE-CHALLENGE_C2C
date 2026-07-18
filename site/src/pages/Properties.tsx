@@ -72,33 +72,33 @@ export default function Properties() {
         <div className="mb-6 rounded-2xl border border-border bg-card p-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             <Select value={transaction} onValueChange={v => update({ transaction: v })}>
-              <SelectTrigger className="h-11 rounded-xl"><SelectValue placeholder="Achat / Location" /></SelectTrigger>
+              <SelectTrigger aria-label="Achat ou location" className="h-11 rounded-xl"><SelectValue placeholder="Achat / Location" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="Achat">Achat</SelectItem>
                 <SelectItem value="Location">Location</SelectItem>
               </SelectContent>
             </Select>
             <Select value={type} onValueChange={v => update({ type: v })}>
-              <SelectTrigger className="h-11 rounded-xl"><SelectValue placeholder="Type de bien" /></SelectTrigger>
+              <SelectTrigger aria-label="Type de bien" className="h-11 rounded-xl"><SelectValue placeholder="Type de bien" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="Terrain">Terrain</SelectItem>
                 <SelectItem value="Maison">Maison</SelectItem>
               </SelectContent>
             </Select>
             <Select value={ville} onValueChange={v => update({ ville: v })}>
-              <SelectTrigger className="h-11 rounded-xl"><SelectValue placeholder="Ville" /></SelectTrigger>
+              <SelectTrigger aria-label="Ville" className="h-11 rounded-xl"><SelectValue placeholder="Ville" /></SelectTrigger>
               <SelectContent>
                 {villes.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={budget} onValueChange={v => update({ budget: v })}>
-              <SelectTrigger className="h-11 rounded-xl"><SelectValue placeholder="Budget" /></SelectTrigger>
+              <SelectTrigger aria-label="Budget" className="h-11 rounded-xl"><SelectValue placeholder="Budget" /></SelectTrigger>
               <SelectContent>
                 {budgetRanges.map(b => <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>)}
               </SelectContent>
             </Select>
             <Select value={tri} onValueChange={v => update({ tri: v })}>
-              <SelectTrigger className="h-11 rounded-xl">
+              <SelectTrigger aria-label="Trier les résultats" className="h-11 rounded-xl">
                 <ArrowUpDown className="h-4 w-4 mr-1 opacity-60" />
                 <SelectValue placeholder="Trier" />
               </SelectTrigger>

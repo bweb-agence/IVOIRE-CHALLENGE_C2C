@@ -87,9 +87,9 @@ export default function ContactForm({ defaultMessage = '', showTypeProjet = fals
       )}
       {showTypeProjet && (
         <div>
-          <Label>Type de projet</Label>
+          <Label htmlFor="typeProjet">Type de projet</Label>
           <Select value={form.typeProjet} onValueChange={v => setForm(f => ({ ...f, typeProjet: v }))}>
-            <SelectTrigger><SelectValue placeholder="Sélectionner" /></SelectTrigger>
+            <SelectTrigger id="typeProjet" aria-label="Type de projet"><SelectValue placeholder="Sélectionner" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="terrain">Terrain</SelectItem>
               <SelectItem value="construction">Construction</SelectItem>

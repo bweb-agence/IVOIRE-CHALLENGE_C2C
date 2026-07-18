@@ -47,7 +47,10 @@ export default function Header() {
             <Link
               key={l.to}
               to={l.to}
-              className={`text-xs font-semibold uppercase tracking-[0.15em] transition-colors hover:text-accent ${
+              aria-current={location.pathname === l.to ? 'page' : undefined}
+              className={`rounded text-xs font-semibold uppercase tracking-[0.15em] transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+                scrolled ? 'focus-visible:ring-offset-background' : 'focus-visible:ring-offset-transparent'
+              } ${
                 location.pathname === l.to
                   ? scrolled ? 'text-primary' : 'text-white'
                   : scrolled ? 'text-muted-foreground' : 'text-white/70'
@@ -69,14 +72,20 @@ export default function Header() {
         </div>
 
         {/* Mobile toggle */}
-        <button className="lg:hidden p-2" onClick={() => setOpen(!open)} aria-label="Menu">
+        <button
+          className="lg:hidden p-2"
+          onClick={() => setOpen(!open)}
+          aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
+          aria-expanded={open}
+          aria-controls="menu-mobile"
+        >
           {open ? <X className={`h-6 w-6 ${scrolled ? 'text-foreground' : 'text-white'}`} /> : <Menu className={`h-6 w-6 ${scrolled ? 'text-foreground' : 'text-white'}`} />}
         </button>
       </div>
 
       {/* Mobile nav */}
       {open && (
-        <nav className="lg:hidden bg-background border-t border-border px-4 pb-6 pt-2">
+        <nav id="menu-mobile" className="lg:hidden bg-background border-t border-border px-4 pb-6 pt-2">
           {navLinks.map(l => (
             <Link
               key={l.to}

@@ -6,7 +6,7 @@ import { MessageCircle, Search, ShieldCheck, CreditCard, Factory, Users, Graduat
 import PropertyCard from '@/components/PropertyCard';
 import Seo from '@/components/Seo';
 import { properties, villes, budgetRanges } from '@/data/properties';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 const HERO_IMG = '/images/hero-terrain.webp';
 const BRICKS_IMG = '/images/briques.webp';
@@ -27,11 +27,17 @@ export default function Home() {
 }
 
 function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
-  const [count, setCount] = useState(0);
+  const reduce = useReducedMotion();
+  const [count, setCount] = useState(reduce ? target : 0);
   const ref = useRef<HTMLSpanElement>(null);
   const started = useRef(false);
 
   useEffect(() => {
+    // Animations désactivées : on affiche directement la valeur finale.
+    if (reduce) {
+      setCount(target);
+      return;
+    }
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !started.current) {
@@ -52,22 +58,23 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [target]);
+  }, [target, reduce]);
 
   return <span ref={ref}>{count}{suffix}</span>;
 }
 
 function HeroSection() {
+  const reduce = useReducedMotion();
   return (
-    <section className="relative w-full min-h-screen flex flex-col">
-      <img src={HERO_IMG} width={1632} height={912} fetchPriority="high" className="absolute inset-0 w-full h-full object-cover" alt="Terrain en Côte d'Ivoire" />
+    <section className="relative w-full min-h-dvh flex flex-col">
+      <img src={HERO_IMG} width={1632} height={912} className="absolute inset-0 w-full h-full object-cover" alt="Terrain en Côte d'Ivoire" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
 
       <div className="relative flex-1 flex flex-col justify-end px-4 md:px-12 pb-0 max-w-7xl mx-auto w-full">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={reduce ? false : { opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={reduce ? { duration: 0 } : { duration: 0.8, delay: 0.2 }}
           className="pb-12 md:pb-16"
         >
           <p className="text-xs uppercase tracking-[0.2em] text-accent font-semibold mb-4">Agence & promoteur immobilier agréés</p>
@@ -135,20 +142,20 @@ function SearchBar() {
         <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted-foreground mb-4">Trouvez votre bien en quelques clics</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Select value={type} onValueChange={setType}>
-            <SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Type de bien" /></SelectTrigger>
+            <SelectTrigger aria-label="Type de bien" className="h-12 rounded-xl"><SelectValue placeholder="Type de bien" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="Terrain">Terrain</SelectItem>
               <SelectItem value="Maison">Maison</SelectItem>
             </SelectContent>
           </Select>
           <Select value={ville} onValueChange={setVille}>
-            <SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Ville" /></SelectTrigger>
+            <SelectTrigger aria-label="Ville" className="h-12 rounded-xl"><SelectValue placeholder="Ville" /></SelectTrigger>
             <SelectContent>
               {villes.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
             </SelectContent>
           </Select>
           <Select value={budget} onValueChange={setBudget}>
-            <SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Budget" /></SelectTrigger>
+            <SelectTrigger aria-label="Budget" className="h-12 rounded-xl"><SelectValue placeholder="Budget" /></SelectTrigger>
             <SelectContent>
               {budgetRanges.map(b => <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>)}
             </SelectContent>
@@ -268,8 +275,8 @@ function TestimonialsSection() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((t, i) => (
             <div key={i} className="rounded-2xl border border-border bg-card p-8 hover:shadow-lg transition-shadow">
-              <div className="flex gap-1 mb-5">
-                {[...Array(5)].map((_, j) => <Star key={j} className="h-4 w-4 fill-accent text-accent" />)}
+              <div className="flex gap-1 mb-5" role="img" aria-label="Note : 5 étoiles sur 5">
+                {[...Array(5)].map((_, j) => <Star key={j} aria-hidden="true" className="h-4 w-4 fill-accent text-accent" />)}
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed mb-6">"{t.citation}"</p>
               <div className="flex items-center gap-4">
