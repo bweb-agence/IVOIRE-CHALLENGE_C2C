@@ -76,7 +76,9 @@ export default {
           900: '#0c3a54',
           950: '#072536',
         },
-        // Rampe Or 2C — accent de marque (aplats/déco). Distincte du slot shadcn `accent` (survol neutre).
+        // Rampe Or 2C — source unique de l'or de marque. gold-500 (#ed9f00) == le slot shadcn `accent`
+        // (--accent: 40 100% 46%) : `accent` est l'or opérationnel (boutons/textes), la rampe fournit
+        // les nuances (survols, aplats, dégradés). Utiliser `gold-700` pour l'or sur fond clair (contraste).
         gold: {
           50: '#fff8e6',
           100: '#fdecbf',

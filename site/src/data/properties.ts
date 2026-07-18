@@ -130,6 +130,26 @@ export const properties: Property[] = [
 
 export const villes = [...new Set(properties.map(p => p.ville))];
 
+/** Frais de dossier non remboursables (paiement échelonné / briques à crédit). */
+export const FRAIS_DOSSIER = 150000;
+
+/** Tranches de budget partagées (recherche home + page biens). value = "min-max" en FCFA, max vide = illimité. */
+export const budgetRanges = [
+  { value: '0-5000000', label: 'Moins de 5 M FCFA' },
+  { value: '5000000-10000000', label: '5 – 10 M FCFA' },
+  { value: '10000000-25000000', label: '10 – 25 M FCFA' },
+  { value: '25000000-', label: 'Plus de 25 M FCFA' },
+];
+
+/** Teste si un prix entre dans une tranche "min-max" (chaîne vide = pas de filtre). */
+export function priceInRange(prix: number, range: string): boolean {
+  if (!range) return true;
+  const [minS, maxS] = range.split('-');
+  const min = Number(minS) || 0;
+  const max = maxS ? Number(maxS) : Infinity;
+  return prix >= min && prix <= max;
+}
+
 export function formatPrice(prix: number): string {
   return new Intl.NumberFormat('fr-FR').format(prix) + ' FCFA';
 }

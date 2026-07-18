@@ -1,39 +1,54 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, X } from 'lucide-react';
+import { Search, X, ArrowUpDown } from 'lucide-react';
 import PropertyCard from '@/components/PropertyCard';
 import Seo from '@/components/Seo';
-import { properties, villes } from '@/data/properties';
+import { properties, villes, budgetRanges, priceInRange } from '@/data/properties';
 
 const HERO_IMG = '/images/terrain-angre.webp';
 const ITEMS_PER_PAGE = 9;
 
 export default function Properties() {
-  const [searchParams] = useSearchParams();
-  const [type, setType] = useState(searchParams.get('type') || '');
-  const [transaction, setTransaction] = useState('');
-  const [ville, setVille] = useState(searchParams.get('ville') || '');
-  const [budget, setBudget] = useState(searchParams.get('budget') || '');
-  const [page, setPage] = useState(1);
+  // Les filtres vivent dans l'URL : recherche partageable (WhatsApp) et bouton retour fiable.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const type = searchParams.get('type') || '';
+  const transaction = searchParams.get('transaction') || '';
+  const ville = searchParams.get('ville') || '';
+  const budget = searchParams.get('budget') || '';
+  const tri = searchParams.get('tri') || '';
+  const page = Number(searchParams.get('page')) || 1;
 
-  const filtered = useMemo(() => {
-    return properties.filter(p => {
+  /** Met à jour les paramètres d'URL ; toute modif de filtre remet à la page 1. */
+  const update = (patch: Record<string, string>) => {
+    const next = new URLSearchParams(searchParams);
+    for (const [k, v] of Object.entries(patch)) {
+      if (v) next.set(k, v);
+      else next.delete(k);
+    }
+    if (!('page' in patch)) next.delete('page');
+    setSearchParams(next);
+  };
+
+  const results = useMemo(() => {
+    const list = properties.filter(p => {
       if (type && p.type !== type) return false;
       if (transaction && p.transaction !== transaction) return false;
       if (ville && p.ville !== ville) return false;
-      if (budget && p.prix > Number(budget)) return false;
+      if (!priceInRange(p.prix, budget)) return false;
       return true;
     });
-  }, [type, transaction, ville, budget]);
+    if (tri === 'prix-asc') list.sort((a, b) => a.prix - b.prix);
+    else if (tri === 'prix-desc') list.sort((a, b) => b.prix - a.prix);
+    return list;
+  }, [type, transaction, ville, budget, tri]);
 
-  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
-  const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+  const totalPages = Math.ceil(results.length / ITEMS_PER_PAGE);
+  const paginated = results.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
-  const clearFilters = () => { setType(''); setTransaction(''); setVille(''); setBudget(''); setPage(1); };
   const hasFilters = type || transaction || ville || budget;
+  const clearFilters = () => setSearchParams(new URLSearchParams());
 
   return (
     <div>
@@ -48,39 +63,64 @@ export default function Properties() {
         <div className="relative h-full flex flex-col justify-end px-4 md:px-12 pb-12 max-w-7xl mx-auto">
           <p className="text-xs uppercase tracking-[0.2em] text-accent font-semibold mb-3">Nos biens</p>
           <h1 className="text-4xl md:text-5xl font-bold text-white">Nos biens disponibles</h1>
-          <p className="mt-3 text-white/60 max-w-lg">Terrains et maisons vérifiés, prêts à l'achat ou à la construction.</p>
+          <p className="mt-3 text-white/70 max-w-lg">Terrains et maisons vérifiés, prêts à l'achat ou à la construction.</p>
         </div>
       </section>
 
       <div className="container mx-auto px-4 lg:px-8 py-12">
         {/* Filters */}
-        <div className="mb-10 rounded-2xl border border-border bg-card p-5">
+        <div className="mb-6 rounded-2xl border border-border bg-card p-5">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-            <Select value={transaction} onValueChange={v => { setTransaction(v); setPage(1); }}>
+            <Select value={transaction} onValueChange={v => update({ transaction: v })}>
               <SelectTrigger className="h-11 rounded-xl"><SelectValue placeholder="Achat / Location" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="Achat">Achat</SelectItem>
                 <SelectItem value="Location">Location</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={type} onValueChange={v => { setType(v); setPage(1); }}>
+            <Select value={type} onValueChange={v => update({ type: v })}>
               <SelectTrigger className="h-11 rounded-xl"><SelectValue placeholder="Type de bien" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="Terrain">Terrain</SelectItem>
                 <SelectItem value="Maison">Maison</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={ville} onValueChange={v => { setVille(v); setPage(1); }}>
+            <Select value={ville} onValueChange={v => update({ ville: v })}>
               <SelectTrigger className="h-11 rounded-xl"><SelectValue placeholder="Ville" /></SelectTrigger>
               <SelectContent>
                 {villes.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
               </SelectContent>
             </Select>
-            <Input type="number" placeholder="Budget max (FCFA)" value={budget} onChange={e => { setBudget(e.target.value); setPage(1); }} className="h-11 rounded-xl" />
-            {hasFilters && (
-              <Button variant="ghost" onClick={clearFilters} className="h-11 rounded-xl"><X className="mr-2 h-4 w-4" /> Effacer</Button>
-            )}
+            <Select value={budget} onValueChange={v => update({ budget: v })}>
+              <SelectTrigger className="h-11 rounded-xl"><SelectValue placeholder="Budget" /></SelectTrigger>
+              <SelectContent>
+                {budgetRanges.map(b => <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
+            <Select value={tri} onValueChange={v => update({ tri: v })}>
+              <SelectTrigger className="h-11 rounded-xl">
+                <ArrowUpDown className="h-4 w-4 mr-1 opacity-60" />
+                <SelectValue placeholder="Trier" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="prix-asc">Prix croissant</SelectItem>
+                <SelectItem value="prix-desc">Prix décroissant</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
+        </div>
+
+        {/* Compteur + reset */}
+        <div className="mb-8 flex items-center justify-between gap-4">
+          <p className="text-sm text-muted-foreground">
+            <span className="font-semibold text-foreground">{results.length}</span>{' '}
+            {results.length > 1 ? 'biens trouvés' : 'bien trouvé'}
+          </p>
+          {hasFilters && (
+            <Button variant="ghost" size="sm" onClick={clearFilters} className="rounded-full text-muted-foreground">
+              <X className="mr-2 h-4 w-4" /> Effacer les filtres
+            </Button>
+          )}
         </div>
 
         {/* Results */}
@@ -97,7 +137,7 @@ export default function Properties() {
                     variant={page === i + 1 ? 'default' : 'outline'}
                     size="sm"
                     className="rounded-full"
-                    onClick={() => { setPage(i + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                    onClick={() => { update({ page: String(i + 1) }); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   >
                     {i + 1}
                   </Button>
@@ -108,7 +148,7 @@ export default function Properties() {
         ) : (
           <div className="rounded-2xl border border-border bg-card p-12 text-center">
             <Search className="mx-auto h-10 w-10 text-muted-foreground mb-4" />
-            <p className="text-muted-foreground font-medium">Aucun bien ne correspond à votre recherche.</p>
+            <p className="text-foreground font-medium">Aucun bien ne correspond à votre recherche.</p>
             <p className="text-sm text-muted-foreground mt-2">Contactez-nous, nous avons peut-être une opportunité qui n'est pas encore en ligne.</p>
             <Button asChild className="mt-6 rounded-full" variant="outline">
               <a href="https://wa.me/2250704085000" target="_blank" rel="noopener noreferrer">Nous contacter</a>

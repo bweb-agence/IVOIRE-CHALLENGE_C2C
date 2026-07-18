@@ -1,5 +1,18 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600;700&display=swap");
-
+/* Polices auto-hébergées (variable, sous-ensemble latin) — plus de dépendance à Google Fonts */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-variable.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/dm-sans-variable.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;
@@ -81,5 +94,9 @@
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
+  }
+  /* Titres en DM Sans (police d'affichage de la marque) ; le corps reste en Inter. */
+  h1, h2, h3, h4 {
+    @apply font-heading;
   }
 }

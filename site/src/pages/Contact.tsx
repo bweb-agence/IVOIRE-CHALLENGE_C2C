@@ -1,6 +1,7 @@
 import { Phone, Mail, MapPin, MessageCircle, Clock } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
 import Seo from '@/components/Seo';
+import MapEmbed from '@/components/MapEmbed';
 
 const HERO_IMG = '/images/hero-terrain.webp';
 
@@ -46,8 +47,8 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-border bg-muted h-64 flex items-center justify-center text-sm text-muted-foreground">
-              <MapPin className="h-6 w-6 mr-2" /> Carte Google Maps — Abidjan
+            <div className="overflow-hidden rounded-2xl border border-border">
+              <MapEmbed query="Abidjan, Côte d'Ivoire" className="h-64" />
             </div>
           </div>
 

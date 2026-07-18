@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MessageCircle, Search, ShieldCheck, CreditCard, Factory, Users, GraduationCap, Star, ArrowRight, CheckCircle2, Landmark, MapPin, ArrowUpRight } from 'lucide-react';
 import PropertyCard from '@/components/PropertyCard';
 import Seo from '@/components/Seo';
-import { properties, villes } from '@/data/properties';
+import { properties, villes, budgetRanges } from '@/data/properties';
 import { motion } from 'framer-motion';
 
 const HERO_IMG = '/images/hero-terrain.webp';
@@ -148,7 +147,12 @@ function SearchBar() {
               {villes.map(v => <SelectItem key={v} value={v}>{v}</SelectItem>)}
             </SelectContent>
           </Select>
-          <Input type="number" placeholder="Budget max (FCFA)" value={budget} onChange={e => setBudget(e.target.value)} className="h-12 rounded-xl" />
+          <Select value={budget} onValueChange={setBudget}>
+            <SelectTrigger className="h-12 rounded-xl"><SelectValue placeholder="Budget" /></SelectTrigger>
+            <SelectContent>
+              {budgetRanges.map(b => <SelectItem key={b.value} value={b.value}>{b.label}</SelectItem>)}
+            </SelectContent>
+          </Select>
           <Button onClick={handleSearch} className="h-12 rounded-xl bg-primary text-primary-foreground"><Search className="mr-2 h-4 w-4" /> Rechercher</Button>
         </div>
       </div>

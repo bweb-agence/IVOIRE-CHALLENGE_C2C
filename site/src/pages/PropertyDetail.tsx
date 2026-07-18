@@ -1,10 +1,13 @@
 import { useParams, Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, MapPin, Maximize2, FileText, CreditCard, Navigation, MessageCircle } from 'lucide-react';
+import { ArrowLeft, MapPin, Maximize2, FileText, CreditCard, Navigation, MessageCircle, Info } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
 import Seo from '@/components/Seo';
-import { properties, formatPrice } from '@/data/properties';
+import Gallery from '@/components/Gallery';
+import MapEmbed from '@/components/MapEmbed';
+import PropertyCard from '@/components/PropertyCard';
+import { properties, formatPrice, FRAIS_DOSSIER } from '@/data/properties';
 import { SITE_URL, SITE_NAME } from '@/lib/seo';
 
 export default function PropertyDetail() {
@@ -45,6 +48,18 @@ export default function PropertyDetail() {
       seller: { '@type': 'RealEstateAgent', name: SITE_NAME },
     },
   };
+
+  // Les frais de dossier s'appliquent au paiement échelonné (transparence, cf. copywriting).
+  const paiementEchelonne = /échelonn/i.test(property.modalitesPaiement);
+
+  // Biens similaires : même ville en priorité, puis même type, sinon d'autres biens.
+  const similaires = properties
+    .filter(p => p.id !== property.id)
+    .sort((a, b) => {
+      const score = (p: typeof property) => (p.ville === property.ville ? 2 : 0) + (p.type === property.type ? 1 : 0);
+      return score(b) - score(a);
+    })
+    .slice(0, 3);
 
   return (
     <div>
@@ -88,20 +103,36 @@ export default function PropertyDetail() {
                 <InfoItem icon={Navigation} label="Repère" value={property.distanceRepere} />
                 <InfoItem icon={CreditCard} label="Paiement" value={property.modalitesPaiement} />
               </div>
+
+              {/* Transparence : frais de dossier (paiement échelonné) */}
+              {paiementEchelonne && (
+                <div className="mt-6 flex items-start gap-3 rounded-xl bg-warning-bg/70 border border-warning/20 p-4">
+                  <Info className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
+                  <p className="text-sm text-foreground">
+                    <span className="font-semibold">Frais de dossier : {formatPrice(FRAIS_DOSSIER)}</span> — non
+                    remboursables, à régler à l'ouverture du dossier en cas de paiement échelonné.
+                  </p>
+                </div>
+              )}
             </div>
+
+            {/* Galerie (si plusieurs photos) */}
+            <Gallery photos={property.photos} alt={property.nom} />
 
             {/* Description */}
             <div className="rounded-2xl border border-border bg-card p-8">
               <h2 className="text-xs font-semibold uppercase tracking-[0.15em] text-accent mb-4">Description</h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">{property.description}</p>
+              <p className="text-[15px] text-muted-foreground leading-relaxed">{property.description}</p>
             </div>
 
             {/* Localisation */}
             <div className="rounded-2xl border border-border bg-card p-8">
               <h2 className="text-xs font-semibold uppercase tracking-[0.15em] text-accent mb-4">Localisation</h2>
-              <p className="text-sm text-muted-foreground mb-4">{property.distanceRepere}</p>
-              <div className="rounded-xl bg-muted h-48 flex items-center justify-center text-sm text-muted-foreground">
-                <MapPin className="h-6 w-6 mr-2" /> {property.ville}, {property.quartier}
+              <p className="text-sm text-muted-foreground mb-4 flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-primary" /> {property.ville}, {property.quartier} — {property.distanceRepere}
+              </p>
+              <div className="overflow-hidden rounded-xl border border-border">
+                <MapEmbed query={`${property.quartier}, ${property.ville}, Côte d'Ivoire`} className="h-64" />
               </div>
             </div>
           </div>
@@ -125,6 +156,24 @@ export default function PropertyDetail() {
             </div>
           </div>
         </div>
+
+        {/* Biens similaires */}
+        {similaires.length > 0 && (
+          <section className="mt-20">
+            <div className="mb-8 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent mb-2">À découvrir aussi</p>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground">Biens similaires</h2>
+              </div>
+              <Button asChild variant="outline" className="rounded-full w-fit hidden sm:inline-flex">
+                <Link to="/biens">Tous nos biens</Link>
+              </Button>
+            </div>
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {similaires.map(p => <PropertyCard key={p.id} property={p} />)}
+            </div>
+          </section>
+        )}
       </div>
     </div>
   );
