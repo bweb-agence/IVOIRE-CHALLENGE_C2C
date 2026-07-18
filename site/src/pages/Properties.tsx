@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, X } from 'lucide-react';
 import PropertyCard from '@/components/PropertyCard';
+import Seo from '@/components/Seo';
 import { properties, villes } from '@/data/properties';
 
 const HERO_IMG = '/images/terrain-angre.webp';
@@ -36,6 +37,10 @@ export default function Properties() {
 
   return (
     <div>
+      <Seo
+        title="Nos biens disponibles — terrains & maisons à Abidjan"
+        description="Terrains documentés (ACD / titre foncier) et maisons vérifiés à Abidjan, Azaguié, Bingerville, Grand-Bassam. Achat comptant ou paiement échelonné jusqu'à 12 mois."
+      />
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[400px]">
         <img src={HERO_IMG} width={1152} height={896} className="absolute inset-0 w-full h-full object-cover" alt="" />

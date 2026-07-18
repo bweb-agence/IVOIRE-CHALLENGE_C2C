@@ -1,6 +1,7 @@
 import { ShieldCheck, Eye, Wallet, Heart, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import Seo from '@/components/Seo';
 
 const HERO_IMG = '/images/briques.webp';
 
@@ -20,6 +21,10 @@ const team = [
 export default function About() {
   return (
     <div>
+      <Seo
+        title="Qui sommes-nous — agence & promoteur immobilier agréés"
+        description="Ivoire Challenge Corporation (2C), agence immobilière et promoteur agréés, accompagne les Ivoiriens dans l'achat de terrain, la construction et le financement des matériaux."
+      />
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[400px]">
         <img src={HERO_IMG} width={1152} height={896} className="absolute inset-0 w-full h-full object-cover" alt="" />
@@ -76,7 +81,7 @@ export default function About() {
                   {m.initials}
                 </div>
                 <h3 className="font-semibold text-primary-foreground">{m.nom}</h3>
-                <p className="text-sm text-primary-foreground/60 mt-1">{m.fonction}</p>
+                <p className="text-sm text-primary-foreground/75 mt-1">{m.fonction}</p>
               </div>
             ))}
           </div>

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MessageCircle, Search, ShieldCheck, CreditCard, Factory, Users, GraduationCap, Star, ArrowRight, CheckCircle2, Landmark, MapPin, ArrowUpRight } from 'lucide-react';
 import PropertyCard from '@/components/PropertyCard';
+import Seo from '@/components/Seo';
 import { properties, villes } from '@/data/properties';
 import { motion } from 'framer-motion';
 
@@ -14,6 +15,7 @@ const BRICKS_IMG = '/images/briques.webp';
 export default function Home() {
   return (
     <>
+      <Seo title="Ivoire Challenge Corporation (2C) — De locataire à propriétaire, sans se ruiner" />
       <HeroSection />
       <SearchBar />
       <FeaturedProperties />
@@ -200,7 +202,7 @@ function ServicesSection() {
                 <s.icon className="h-7 w-7 text-accent" />
               </div>
               <h3 className="font-semibold text-primary-foreground mb-3 text-lg">{s.title}</h3>
-              <p className="text-sm text-primary-foreground/60 leading-relaxed">{s.desc}</p>
+              <p className="text-sm text-primary-foreground/80 leading-relaxed">{s.desc}</p>
             </div>
           ))}
         </div>
@@ -293,7 +295,7 @@ function CTASection() {
         <h2 className="text-3xl md:text-5xl font-bold text-primary-foreground max-w-3xl mx-auto leading-tight">
           Démarrez votre projet immobilier en toute <span className="text-accent">confiance</span>
         </h2>
-        <p className="mt-6 text-primary-foreground/60 max-w-xl mx-auto">
+        <p className="mt-6 text-primary-foreground/80 max-w-xl mx-auto">
           Nos conseillers sont disponibles pour étudier votre projet et vous proposer la meilleure solution.
         </p>
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">

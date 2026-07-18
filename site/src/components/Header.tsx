@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Phone } from 'lucide-react';
+import { Menu, X, Phone, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const LOGO = '/images/logo.png';
@@ -87,9 +87,24 @@ export default function Header() {
               {l.label}
             </Link>
           ))}
-          <Button asChild size="sm" className="mt-3 w-full bg-accent text-accent-foreground rounded-full">
-            <Link to="/contact" onClick={() => setOpen(false)}>Nous contacter</Link>
-          </Button>
+
+          {/* Contact direct — indispensable sur mobile */}
+          <div className="mt-4 flex flex-col gap-3 border-t border-border pt-4">
+            <a
+              href="tel:+2250704085000"
+              className="flex items-center gap-3 text-sm font-medium text-foreground"
+            >
+              <Phone className="h-4 w-4 text-primary" /> 07 04 08 50 00
+            </a>
+            <Button asChild size="sm" className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-full">
+              <a href="https://wa.me/2250704085000" target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)}>
+                <MessageCircle className="mr-2 h-4 w-4" /> WhatsApp
+              </a>
+            </Button>
+            <Button asChild size="sm" className="w-full bg-accent text-accent-foreground rounded-full">
+              <Link to="/contact" onClick={() => setOpen(false)}>Nous contacter</Link>
+            </Button>
+          </div>
         </nav>
       )}
     </header>

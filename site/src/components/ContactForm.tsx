@@ -5,7 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Send, Loader2 } from 'lucide-react';
+import { MessageCircle, Mail, Loader2 } from 'lucide-react';
+
+const AGENCE_EMAIL = 'infos@ivoire2c.com';
+const AGENCE_WHATSAPP = '2250704085000';
 
 interface ContactFormProps {
   defaultMessage?: string;
@@ -23,29 +26,47 @@ export default function ContactForm({ defaultMessage = '', showTypeProjet = fals
     message: defaultMessage,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  // Champs obligatoires communs aux deux canaux.
+  const isValid = () => {
     if (!form.nom.trim() || !form.telephone.trim()) {
-      toast.error('Veuillez remplir les champs obligatoires.');
-      return;
+      toast.error('Veuillez renseigner au moins votre nom et votre téléphone.');
+      return false;
     }
-    setLoading(true);
+    return true;
+  };
 
-    // Transmission via WhatsApp : le message arrive directement sur le numéro de l'agence.
-    const lignes = [
+  // Corps du message partagé par WhatsApp et l'email.
+  const buildBody = () =>
+    [
       'Bonjour, je vous contacte depuis le site Ivoire Challenge Corporation.',
       `Nom : ${form.nom.trim()}`,
       `Téléphone : ${form.telephone.trim()}`,
       form.email.trim() && `Email : ${form.email.trim()}`,
       form.typeProjet && `Type de projet : ${form.typeProjet}`,
       form.message.trim() && `Message : ${form.message.trim()}`,
-    ].filter(Boolean);
+    ]
+      .filter(Boolean)
+      .join('\n');
 
-    window.open(`https://wa.me/2250704085000?text=${encodeURIComponent(lignes.join('\n'))}`, '_blank', 'noopener,noreferrer');
+  const resetForm = () => setForm({ nom: '', telephone: '', email: '', typeProjet: '', message: '' });
 
+  // Canal principal : WhatsApp (là où l'agence répond le plus vite).
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isValid()) return;
+    setLoading(true);
+    window.open(`https://wa.me/${AGENCE_WHATSAPP}?text=${encodeURIComponent(buildBody())}`, '_blank', 'noopener,noreferrer');
     setLoading(false);
     toast.success('Votre message est prêt dans WhatsApp — appuyez sur Envoyer pour nous le transmettre.');
-    setForm({ nom: '', telephone: '', email: '', typeProjet: '', message: '' });
+    resetForm();
+  };
+
+  // Canal secondaire : email pré-rempli dans l'application de messagerie du visiteur.
+  const handleEmail = () => {
+    if (!isValid()) return;
+    const sujet = form.typeProjet ? `Demande — ${form.typeProjet}` : 'Demande depuis le site';
+    window.location.href = `mailto:${AGENCE_EMAIL}?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(buildBody())}`;
+    toast.success('Votre logiciel de messagerie va s\'ouvrir avec le message pré-rempli.');
   };
 
   return (
@@ -82,10 +103,14 @@ export default function ContactForm({ defaultMessage = '', showTypeProjet = fals
         <Label htmlFor="message">Message</Label>
         <Textarea id="message" value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} placeholder="Votre message..." rows={4} />
       </div>
-      <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
-        Envoyer ma demande
+      <Button type="submit" className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white" disabled={loading}>
+        {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <MessageCircle className="h-4 w-4 mr-2" />}
+        Envoyer via WhatsApp
       </Button>
+      <Button type="button" variant="outline" className="w-full" onClick={handleEmail}>
+        <Mail className="h-4 w-4 mr-2" /> Envoyer par email
+      </Button>
+      <p className="text-xs text-muted-foreground text-center">Réponse la plus rapide via WhatsApp.</p>
     </form>
   );
 }

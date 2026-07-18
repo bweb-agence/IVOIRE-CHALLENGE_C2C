@@ -1,11 +1,16 @@
 import { Phone, Mail, MapPin, MessageCircle, Clock } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
+import Seo from '@/components/Seo';
 
 const HERO_IMG = '/images/hero-terrain.webp';
 
 export default function Contact() {
   return (
     <div>
+      <Seo
+        title="Contact — parlons de votre projet immobilier"
+        description="Contactez Ivoire Challenge Corporation (2C) à Abidjan : téléphone, WhatsApp au 07 04 08 50 00, email infos@ivoire2c.com. Ouvert du lundi au samedi."
+      />
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[400px]">
         <img src={HERO_IMG} width={1632} height={912} className="absolute inset-0 w-full h-full object-cover" alt="" />

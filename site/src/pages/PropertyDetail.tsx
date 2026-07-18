@@ -3,7 +3,9 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, MapPin, Maximize2, FileText, CreditCard, Navigation, MessageCircle } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
+import Seo from '@/components/Seo';
 import { properties, formatPrice } from '@/data/properties';
+import { SITE_URL, SITE_NAME } from '@/lib/seo';
 
 export default function PropertyDetail() {
   const { id } = useParams();
@@ -12,6 +14,7 @@ export default function PropertyDetail() {
   if (!property) {
     return (
       <div className="pt-32 container mx-auto px-4 py-16 text-center">
+        <Seo title="Bien introuvable" />
         <h1 className="text-2xl font-bold text-foreground mb-4">Bien non trouvé</h1>
         <Button asChild variant="outline" className="rounded-full"><Link to="/biens"><ArrowLeft className="mr-2 h-4 w-4" /> Retour</Link></Button>
       </div>
@@ -20,8 +23,38 @@ export default function PropertyDetail() {
 
   const statusColor = property.statut === 'Disponible' ? 'bg-green-500' : property.statut === 'Réservé' ? 'bg-amber-500' : 'bg-red-500';
 
+  const availability =
+    property.statut === 'Disponible' ? 'https://schema.org/InStock'
+    : property.statut === 'Réservé' ? 'https://schema.org/PreOrder'
+    : 'https://schema.org/SoldOut';
+
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: property.nom,
+    description: property.description,
+    image: `${SITE_URL}${property.photos[0]}`,
+    category: property.type,
+    brand: { '@type': 'Brand', name: SITE_NAME },
+    offers: {
+      '@type': 'Offer',
+      price: property.prix,
+      priceCurrency: 'XOF',
+      availability,
+      url: `${SITE_URL}/biens/${property.id}`,
+      seller: { '@type': 'RealEstateAgent', name: SITE_NAME },
+    },
+  };
+
   return (
     <div>
+      <Seo
+        title={`${property.nom} — ${formatPrice(property.prix)}`}
+        description={`${property.type} de ${property.superficie} m² à ${property.ville}, ${property.quartier}. ${property.statutJuridique}. ${property.modalitesPaiement}. ${formatPrice(property.prix)}.`}
+        image={property.photos[0]}
+        type="product"
+        jsonLd={productJsonLd}
+      />
       {/* Hero image */}
       <section className="relative h-[50vh] min-h-[400px]">
         <img src={property.photos[0]} alt={property.nom} width={1152} height={896} className="absolute inset-0 w-full h-full object-cover" />

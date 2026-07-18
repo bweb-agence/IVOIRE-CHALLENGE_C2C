@@ -8,13 +8,15 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 200 90% 32%;
+    /* Encre sombre (#10222e) : texte courant très lisible ; le bleu de marque
+       reste réservé aux titres accentués, liens et prix (via text-primary). */
+    --foreground: 204 48% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 200 90% 32%;
+    --card-foreground: 204 48% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 200 90% 32%;
+    --popover-foreground: 204 48% 12%;
 
     --primary: 200 90% 32%;
     --primary-foreground: 0 0% 98%;

@@ -1,0 +1,2 @@
+# Fallback SPA (Netlify) : toute route est servie par index.html, le routeur React prend le relais.
+/*    /index.html   200

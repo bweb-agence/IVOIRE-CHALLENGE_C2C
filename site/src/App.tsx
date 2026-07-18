@@ -7,6 +7,8 @@ import Properties from '@/pages/Properties';
 import PropertyDetail from '@/pages/PropertyDetail';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
+import MentionsLegales from '@/pages/MentionsLegales';
+import Confidentialite from '@/pages/Confidentialite';
 import NotFound from '@/pages/NotFound';
 
 export default function App() {
@@ -20,6 +22,8 @@ export default function App() {
           <Route path="/biens/:id" element={<PropertyDetail />} />
           <Route path="/a-propos" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/mentions-legales" element={<MentionsLegales />} />
+          <Route path="/confidentialite" element={<Confidentialite />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

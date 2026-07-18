@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Search } from 'lucide-react';
+import Seo from '@/components/Seo';
 
 export default function NotFound() {
   return (
     <section className="bg-primary min-h-[70vh] flex items-center">
+      <Seo title="Page introuvable (404)" />
       <div className="container mx-auto px-4 lg:px-8 py-32 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent mb-4">Erreur 404</p>
         <h1 className="text-4xl md:text-6xl font-bold text-primary-foreground leading-tight">
