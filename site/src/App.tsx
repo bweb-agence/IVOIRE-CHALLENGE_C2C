@@ -19,6 +19,7 @@ import Login from '@/admin/Login';
 import Placeholder from '@/admin/Placeholder';
 import PropertiesList from '@/admin/properties/PropertiesList';
 import PropertyForm from '@/admin/properties/PropertyForm';
+import RequestsList from '@/admin/requests/RequestsList';
 
 export default function App() {
   return (
@@ -72,15 +73,7 @@ export default function App() {
                   />
                 }
               />
-              <Route
-                path="demandes"
-                element={
-                  <Placeholder
-                    title="Demandes"
-                    description="Consulter les demandes reçues via le formulaire de contact et suivre leur traitement."
-                  />
-                }
-              />
+              <Route path="demandes" element={<RequestsList />} />
             </Route>
           </Route>
         </Routes>
