@@ -30,3 +30,25 @@ export function mediaUrl(path: string): string {
   if (!path || path.startsWith('http') || path.startsWith('/')) return path;
   return supabase.storage.from('medias').getPublicUrl(path).data.publicUrl;
 }
+
+const MEDIAS_PREFIX = '/storage/v1/object/public/medias/';
+
+/** Chemin interne au bucket à partir d'une URL publique.
+ *  Renvoie null pour les images qui ne viennent pas du bucket (ex. /images/… livrées avec le site). */
+export function mediaPathFromUrl(url: string): string | null {
+  const i = url.indexOf(MEDIAS_PREFIX);
+  return i === -1 ? null : decodeURIComponent(url.slice(i + MEDIAS_PREFIX.length));
+}
+
+/** Supprime du stockage les photos téléversées via l'administration.
+ *  Sans effet sur les images livrées avec le site. Les échecs sont ignorés :
+ *  un fichier orphelin est moins grave qu'une suppression bloquée. */
+export async function deleteMedias(urls: string[]): Promise<void> {
+  const paths = urls.map(mediaPathFromUrl).filter((p): p is string => Boolean(p));
+  if (paths.length === 0) return;
+  try {
+    await supabase.storage.from('medias').remove(paths);
+  } catch {
+    /* ignoré volontairement */
+  }
+}

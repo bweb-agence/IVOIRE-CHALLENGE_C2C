@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Plus, Search, Pencil, Trash2, Eye, EyeOff, Loader2, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { supabase } from '@/lib/supabase';
+import { supabase, deleteMedias } from '@/lib/supabase';
 import type { PropertyRow } from '@/lib/database.types';
 import { toast } from 'sonner';
 import PageHeader from '../PageHeader';
@@ -61,6 +61,8 @@ export default function PropertiesList() {
       toast.error("La suppression a échoué.");
       return;
     }
+    // Libère les photos du stockage pour ne pas laisser de fichiers orphelins.
+    await deleteMedias(row.photos ?? []);
     setRows(rs => rs.filter(r => r.id !== row.id));
     toast.success('Bien supprimé.');
   };
