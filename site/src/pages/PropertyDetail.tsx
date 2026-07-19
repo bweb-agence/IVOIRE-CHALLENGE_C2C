@@ -154,7 +154,7 @@ export default function PropertyDetail() {
             <div className="rounded-2xl border border-border bg-card p-8 sticky top-24">
               <h2 className="text-xs font-semibold uppercase tracking-[0.15em] text-accent mb-1">Ce bien vous intéresse ?</h2>
               <p className="text-sm text-muted-foreground mb-6">Remplissez le formulaire ou contactez-nous directement.</p>
-              <ContactForm defaultMessage={`Je souhaite plus d'informations sur : ${property.nom}`} />
+              <ContactForm defaultMessage={`Je souhaite plus d'informations sur : ${property.nom}`} propertySlug={property.id} />
               <div className="mt-5 text-center">
                 <a
                   href={`https://wa.me/2250704085000?text=${encodeURIComponent(`Bonjour, je suis intéressé(e) par : ${property.nom}`)}`}

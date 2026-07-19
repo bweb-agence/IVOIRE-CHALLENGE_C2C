@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { MessageCircle, Mail, Loader2 } from 'lucide-react';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 const AGENCE_EMAIL = 'infos@ivoire2c.com';
 const AGENCE_WHATSAPP = '2250704085000';
@@ -14,9 +15,11 @@ interface ContactFormProps {
   defaultMessage?: string;
   showTypeProjet?: boolean;
   showEmail?: boolean;
+  /** Bien concerné, pour rattacher la demande dans l'administration. */
+  propertySlug?: string;
 }
 
-export default function ContactForm({ defaultMessage = '', showTypeProjet = false, showEmail = false }: ContactFormProps) {
+export default function ContactForm({ defaultMessage = '', showTypeProjet = false, showEmail = false, propertySlug }: ContactFormProps) {
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     nom: '',
@@ -50,11 +53,36 @@ export default function ContactForm({ defaultMessage = '', showTypeProjet = fals
 
   const resetForm = () => setForm({ nom: '', telephone: '', email: '', typeProjet: '', message: '' });
 
+  /** Conserve une trace de la demande côté administration. Volontairement
+   *  silencieux en cas d'échec : le visiteur ne doit jamais être bloqué,
+   *  son message part de toute façon par WhatsApp ou email. */
+  const enregistrerDemande = async () => {
+    if (!isSupabaseConfigured) return;
+    try {
+      let property_id: string | null = null;
+      if (propertySlug) {
+        const { data } = await supabase.from('properties').select('id').eq('slug', propertySlug).maybeSingle();
+        property_id = data?.id ?? null;
+      }
+      await supabase.from('contact_requests').insert({
+        nom: form.nom.trim(),
+        telephone: form.telephone.trim(),
+        email: form.email.trim() || null,
+        type_projet: form.typeProjet || null,
+        message: form.message.trim(),
+        property_id,
+      });
+    } catch {
+      // ignoré volontairement
+    }
+  };
+
   // Canal principal : WhatsApp (là où l'agence répond le plus vite).
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid()) return;
     setLoading(true);
+    void enregistrerDemande();
     window.open(`https://wa.me/${AGENCE_WHATSAPP}?text=${encodeURIComponent(buildBody())}`, '_blank', 'noopener,noreferrer');
     setLoading(false);
     toast.success('Votre message est prêt dans WhatsApp — appuyez sur Envoyer pour nous le transmettre.');
@@ -64,6 +92,7 @@ export default function ContactForm({ defaultMessage = '', showTypeProjet = fals
   // Canal secondaire : email pré-rempli dans l'application de messagerie du visiteur.
   const handleEmail = () => {
     if (!isValid()) return;
+    void enregistrerDemande();
     const sujet = form.typeProjet ? `Demande — ${form.typeProjet}` : 'Demande depuis le site';
     window.location.href = `mailto:${AGENCE_EMAIL}?subject=${encodeURIComponent(sujet)}&body=${encodeURIComponent(buildBody())}`;
     toast.success('Votre logiciel de messagerie va s\'ouvrir avec le message pré-rempli.');
