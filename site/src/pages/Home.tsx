@@ -7,6 +7,7 @@ import PropertyCard from '@/components/PropertyCard';
 import Seo from '@/components/Seo';
 import { budgetRanges, type Property } from '@/data/properties';
 import { useProperties } from '@/lib/useProperties';
+import { useTestimonials } from '@/lib/useContent';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const HERO_IMG = '/images/hero-terrain.webp';
@@ -262,13 +263,10 @@ function WhyUsSection() {
   );
 }
 
-const testimonials = [
-  { nom: 'Kouamé A.', ville: 'Abidjan', citation: "Grâce à 2C, j'ai acheté mon terrain à Azaguié en toute sérénité. La documentation était complète et l'accompagnement irréprochable." },
-  { nom: 'Fatou D.', ville: 'Bingerville', citation: "Le programme briques à crédit m'a permis de commencer ma construction sans attendre d'avoir tout le budget. Merci à l'équipe !" },
-  { nom: 'Jean-Marc K.', ville: 'Cocody', citation: "Professionnels, transparents et toujours disponibles. Je recommande Ivoire Challenge Corporation à tous ceux qui veulent investir dans l'immobilier." },
-];
-
 function TestimonialsSection() {
+  const { items: testimonials } = useTestimonials();
+  if (testimonials.length === 0) return null;
+
   return (
     <section className="bg-muted/50 py-20 md:py-28">
       <div className="container mx-auto px-4 lg:px-8">
@@ -279,8 +277,14 @@ function TestimonialsSection() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((t, i) => (
             <div key={i} className="rounded-2xl border border-border bg-card p-8 hover:shadow-lg transition-shadow">
-              <div className="flex gap-1 mb-5" role="img" aria-label="Note : 5 étoiles sur 5">
-                {[...Array(5)].map((_, j) => <Star key={j} aria-hidden="true" className="h-4 w-4 fill-accent text-accent" />)}
+              <div className="flex gap-1 mb-5" role="img" aria-label={`Note : ${t.note} étoiles sur 5`}>
+                {[...Array(5)].map((_, j) => (
+                  <Star
+                    key={j}
+                    aria-hidden="true"
+                    className={`h-4 w-4 ${j < t.note ? 'fill-accent text-accent' : 'text-muted-foreground/30'}`}
+                  />
+                ))}
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed mb-6">"{t.citation}"</p>
               <div className="flex items-center gap-4">

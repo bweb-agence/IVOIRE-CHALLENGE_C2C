@@ -2,6 +2,7 @@ import { ShieldCheck, Eye, Wallet, Heart, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import Seo from '@/components/Seo';
+import { useTeam } from '@/lib/useContent';
 
 const HERO_IMG = '/images/briques.webp';
 
@@ -12,13 +13,9 @@ const values = [
   { icon: Heart, title: 'Proximité', desc: 'Un accompagnement humain, du premier contact à la livraison.' },
 ];
 
-const team = [
-  { nom: 'Directeur Général', fonction: 'Fondateur & PDG', initials: 'DG' },
-  { nom: 'Responsable Commercial', fonction: 'Équipe commerciale', initials: 'RC' },
-  { nom: 'Chef de Projet', fonction: 'Équipe terrain', initials: 'CP' },
-];
-
 export default function About() {
+  const { items: team } = useTeam();
+
   return (
     <div>
       <Seo
@@ -77,8 +74,12 @@ export default function About() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto">
             {team.map(m => (
               <div key={m.nom} className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center hover:bg-white/10 transition-colors">
-                <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-accent/20 text-accent text-2xl font-bold">
-                  {m.initials}
+                <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-accent/20 text-accent text-2xl font-bold">
+                  {m.photo ? (
+                    <img src={m.photo} alt="" width={160} height={160} loading="lazy" className="h-full w-full object-cover" />
+                  ) : (
+                    m.initiales
+                  )}
                 </div>
                 <h3 className="font-semibold text-primary-foreground">{m.nom}</h3>
                 <p className="text-sm text-primary-foreground/75 mt-1">{m.fonction}</p>

@@ -20,6 +20,8 @@ import Placeholder from '@/admin/Placeholder';
 import PropertiesList from '@/admin/properties/PropertiesList';
 import PropertyForm from '@/admin/properties/PropertyForm';
 import RequestsList from '@/admin/requests/RequestsList';
+import TestimonialsList from '@/admin/testimonials/TestimonialsList';
+import TeamList from '@/admin/team/TeamList';
 
 export default function App() {
   return (
@@ -55,24 +57,8 @@ export default function App() {
                   />
                 }
               />
-              <Route
-                path="temoignages"
-                element={
-                  <Placeholder
-                    title="Témoignages"
-                    description="Saisir les vrais avis clients qui remplaceront les témoignages provisoires de la page d'accueil."
-                  />
-                }
-              />
-              <Route
-                path="equipe"
-                element={
-                  <Placeholder
-                    title="Équipe"
-                    description="Gérer les membres affichés sur la page À propos, à la place des profils provisoires."
-                  />
-                }
-              />
+              <Route path="temoignages" element={<TestimonialsList />} />
+              <Route path="equipe" element={<TeamList />} />
               <Route path="demandes" element={<RequestsList />} />
             </Route>
           </Route>
