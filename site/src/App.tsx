@@ -11,23 +11,81 @@ import MentionsLegales from '@/pages/MentionsLegales';
 import Confidentialite from '@/pages/Confidentialite';
 import NotFound from '@/pages/NotFound';
 
+// Administration
+import { AuthProvider } from '@/admin/AuthContext';
+import RequireAuth from '@/admin/RequireAuth';
+import AdminLayout from '@/admin/AdminLayout';
+import Login from '@/admin/Login';
+import Placeholder from '@/admin/Placeholder';
+import PropertiesList from '@/admin/properties/PropertiesList';
+import PropertyForm from '@/admin/properties/PropertyForm';
+
 export default function App() {
   return (
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <ScrollToTop />
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/biens" element={<Properties />} />
-          <Route path="/biens/:id" element={<PropertyDetail />} />
-          <Route path="/a-propos" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/mentions-legales" element={<MentionsLegales />} />
-          <Route path="/confidentialite" element={<Confidentialite />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
-      <Toaster />
+      <AuthProvider>
+        <ScrollToTop />
+        <Routes>
+          {/* Site public */}
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/biens" element={<Properties />} />
+            <Route path="/biens/:id" element={<PropertyDetail />} />
+            <Route path="/a-propos" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/mentions-legales" element={<MentionsLegales />} />
+            <Route path="/confidentialite" element={<Confidentialite />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+
+          {/* Administration */}
+          <Route path="/admin/login" element={<Login />} />
+          <Route element={<RequireAuth />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<PropertiesList />} />
+              <Route path="biens/nouveau" element={<PropertyForm />} />
+              <Route path="biens/:id" element={<PropertyForm />} />
+              <Route
+                path="actualites"
+                element={
+                  <Placeholder
+                    title="Actualités"
+                    description="Publier des annonces, promotions et nouveaux lotissements, avec une section dédiée sur le site."
+                  />
+                }
+              />
+              <Route
+                path="temoignages"
+                element={
+                  <Placeholder
+                    title="Témoignages"
+                    description="Saisir les vrais avis clients qui remplaceront les témoignages provisoires de la page d'accueil."
+                  />
+                }
+              />
+              <Route
+                path="equipe"
+                element={
+                  <Placeholder
+                    title="Équipe"
+                    description="Gérer les membres affichés sur la page À propos, à la place des profils provisoires."
+                  />
+                }
+              />
+              <Route
+                path="demandes"
+                element={
+                  <Placeholder
+                    title="Demandes"
+                    description="Consulter les demandes reçues via le formulaire de contact et suivre leur traitement."
+                  />
+                }
+              />
+            </Route>
+          </Route>
+        </Routes>
+        <Toaster />
+      </AuthProvider>
     </BrowserRouter>
   );
 }
