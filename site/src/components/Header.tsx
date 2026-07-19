@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAnnouncements } from '@/lib/useAnnouncements';
 
 const LOGO = '/images/logo.png';
 const LOGO_BLANC = '/images/logo-blanc.png';
 
-const navLinks = [
+const navLinksBase = [
   { label: 'Accueil', to: '/' },
   { label: 'Nos Biens', to: '/biens' },
   { label: 'À propos', to: '/a-propos' },
@@ -14,6 +15,13 @@ const navLinks = [
 ];
 
 export default function Header() {
+  // La rubrique Actualités n'apparaît que si l'agence y a publié quelque chose.
+  const { items: actualites } = useAnnouncements();
+  const navLinks =
+    actualites.length > 0
+      ? [...navLinksBase.slice(0, 2), { label: 'Actualités', to: '/actualites' }, ...navLinksBase.slice(2)]
+      : navLinksBase;
+
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();

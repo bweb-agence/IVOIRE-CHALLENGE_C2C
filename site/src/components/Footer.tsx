@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, MessageCircle } from 'lucide-react';
+import { useAnnouncements } from '@/lib/useAnnouncements';
 
 const LOGO_BLANC = '/images/logo-blanc.png';
 
 export default function Footer() {
+  // Même règle que l'en-tête : le lien n'apparaît que s'il y a des actualités publiées.
+  const { items: actualites } = useAnnouncements();
+
   return (
     <footer className="bg-primary text-primary-foreground">
       {/* Big brand watermark */}
@@ -28,6 +32,9 @@ export default function Footer() {
               <nav className="flex flex-col gap-3">
                 <Link to="/" className="text-sm text-primary-foreground/75 hover:text-accent transition-colors">Accueil</Link>
                 <Link to="/biens" className="text-sm text-primary-foreground/75 hover:text-accent transition-colors">Nos Biens</Link>
+                {actualites.length > 0 && (
+                  <Link to="/actualites" className="text-sm text-primary-foreground/75 hover:text-accent transition-colors">Actualités</Link>
+                )}
                 <Link to="/a-propos" className="text-sm text-primary-foreground/75 hover:text-accent transition-colors">À propos</Link>
                 <Link to="/contact" className="text-sm text-primary-foreground/75 hover:text-accent transition-colors">Contact</Link>
               </nav>

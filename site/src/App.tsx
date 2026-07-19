@@ -9,6 +9,8 @@ import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 import MentionsLegales from '@/pages/MentionsLegales';
 import Confidentialite from '@/pages/Confidentialite';
+import Actualites from '@/pages/Actualites';
+import ActualiteDetail from '@/pages/ActualiteDetail';
 import NotFound from '@/pages/NotFound';
 
 // Administration
@@ -16,12 +18,12 @@ import { AuthProvider } from '@/admin/AuthContext';
 import RequireAuth from '@/admin/RequireAuth';
 import AdminLayout from '@/admin/AdminLayout';
 import Login from '@/admin/Login';
-import Placeholder from '@/admin/Placeholder';
 import PropertiesList from '@/admin/properties/PropertiesList';
 import PropertyForm from '@/admin/properties/PropertyForm';
 import RequestsList from '@/admin/requests/RequestsList';
 import TestimonialsList from '@/admin/testimonials/TestimonialsList';
 import TeamList from '@/admin/team/TeamList';
+import AnnouncementsList from '@/admin/announcements/AnnouncementsList';
 
 export default function App() {
   return (
@@ -36,6 +38,8 @@ export default function App() {
             <Route path="/biens/:id" element={<PropertyDetail />} />
             <Route path="/a-propos" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/actualites" element={<Actualites />} />
+            <Route path="/actualites/:slug" element={<ActualiteDetail />} />
             <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route path="/confidentialite" element={<Confidentialite />} />
             <Route path="*" element={<NotFound />} />
@@ -48,15 +52,7 @@ export default function App() {
               <Route index element={<PropertiesList />} />
               <Route path="biens/nouveau" element={<PropertyForm />} />
               <Route path="biens/:id" element={<PropertyForm />} />
-              <Route
-                path="actualites"
-                element={
-                  <Placeholder
-                    title="Actualités"
-                    description="Publier des annonces, promotions et nouveaux lotissements, avec une section dédiée sur le site."
-                  />
-                }
-              />
+              <Route path="actualites" element={<AnnouncementsList />} />
               <Route path="temoignages" element={<TestimonialsList />} />
               <Route path="equipe" element={<TeamList />} />
               <Route path="demandes" element={<RequestsList />} />
