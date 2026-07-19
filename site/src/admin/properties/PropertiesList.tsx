@@ -62,7 +62,7 @@ export default function PropertiesList() {
       return;
     }
     // Libère les photos du stockage pour ne pas laisser de fichiers orphelins.
-    await deleteMedias(row.photos ?? []);
+    await deleteMedias([...(row.photos ?? []), ...(row.videos ?? [])]);
     setRows(rs => rs.filter(r => r.id !== row.id));
     toast.success('Bien supprimé.');
   };

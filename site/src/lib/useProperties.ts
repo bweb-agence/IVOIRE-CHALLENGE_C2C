@@ -33,6 +33,7 @@ function fromRow(row: PropertyRow): Property {
     siteApprouve: row.site_approuve,
     aLaUne: row.a_la_une,
     photos: row.photos ?? [],
+    videos: row.videos ?? [],
   };
 }
 

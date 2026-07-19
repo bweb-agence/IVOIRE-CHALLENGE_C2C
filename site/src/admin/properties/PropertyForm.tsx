@@ -10,6 +10,7 @@ import { supabase } from '@/lib/supabase';
 import type { PropertyRow, PropertyStatut, PropertyTransaction, PropertyType } from '@/lib/database.types';
 import { toast } from 'sonner';
 import PhotoUploader from '../PhotoUploader';
+import VideoInput from '../VideoInput';
 import PageHeader from '../PageHeader';
 
 const empty = {
@@ -29,6 +30,7 @@ const empty = {
   a_la_une: false,
   publie: true,
   photos: [] as string[],
+  videos: [] as string[],
 };
 
 /** Identifiant lisible dans l'URL du site public, dérivé du nom. */
@@ -83,6 +85,7 @@ export default function PropertyForm() {
           a_la_une: r.a_la_une,
           publie: r.publie,
           photos: r.photos ?? [],
+          videos: r.videos ?? [],
         });
       });
   }, [id, isNew, navigate]);
@@ -126,6 +129,7 @@ export default function PropertyForm() {
       a_la_une: form.a_la_une,
       publie: form.publie,
       photos: form.photos,
+      videos: form.videos,
     };
 
     const { error } = isNew
@@ -259,6 +263,13 @@ export default function PropertyForm() {
 
         <Section title="Photos" description="La première photo sert de vignette sur le site.">
           <PhotoUploader photos={form.photos} onChange={p => set('photos', p)} folder="biens" />
+        </Section>
+
+        <Section
+          title="Vidéos"
+          description="Visite du terrain, drone, présentation. Un lien est préférable à un fichier."
+        >
+          <VideoInput videos={form.videos} onChange={v => set('videos', v)} folder="biens-videos" />
         </Section>
 
         <Section title="Détails et conditions">

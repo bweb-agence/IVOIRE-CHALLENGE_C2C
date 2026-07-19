@@ -5,6 +5,7 @@ import { ArrowLeft, MapPin, Maximize2, FileText, CreditCard, Navigation, Message
 import ContactForm from '@/components/ContactForm';
 import Seo from '@/components/Seo';
 import Gallery from '@/components/Gallery';
+import VideoPlayer from '@/components/VideoPlayer';
 import MapEmbed from '@/components/MapEmbed';
 import PropertyCard from '@/components/PropertyCard';
 import { formatPrice, FRAIS_DOSSIER } from '@/data/properties';
@@ -130,6 +131,20 @@ export default function PropertyDetail() {
 
             {/* Galerie (si plusieurs photos) */}
             <Gallery photos={property.photos} alt={property.nom} />
+
+            {/* Vidéos du bien */}
+            {property.videos && property.videos.length > 0 && (
+              <div className="rounded-2xl border border-border bg-card p-8">
+                <h2 className="text-xs font-semibold uppercase tracking-[0.15em] text-accent mb-4">
+                  {property.videos.length > 1 ? 'Vidéos' : 'Vidéo'}
+                </h2>
+                <div className="space-y-4">
+                  {property.videos.map((url, i) => (
+                    <VideoPlayer key={url + i} url={url} titre={`${property.nom} — vidéo ${i + 1}`} />
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Description */}
             <div className="rounded-2xl border border-border bg-card p-8">

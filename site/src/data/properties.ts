@@ -15,6 +15,7 @@ export interface Property {
   siteApprouve: boolean;
   aLaUne: boolean;
   photos: string[];
+  videos?: string[];
 }
 
 export const properties: Property[] = [

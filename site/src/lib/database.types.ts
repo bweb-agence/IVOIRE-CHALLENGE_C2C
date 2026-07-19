@@ -23,6 +23,7 @@ export interface PropertyRow {
   site_approuve: boolean;
   a_la_une: boolean;
   photos: string[];
+  videos: string[];
   publie: boolean;
   ordre: number;
   created_at: string;
@@ -49,6 +50,8 @@ export interface TestimonialRow {
   citation: string;
   note: number;
   photo: string | null;
+  photos: string[];
+  video: string | null;
   publie: boolean;
   ordre: number;
   created_at: string;

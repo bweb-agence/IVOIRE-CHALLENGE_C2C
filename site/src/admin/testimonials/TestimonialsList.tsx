@@ -5,12 +5,24 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { supabase } from '@/lib/supabase';
+import { supabase, deleteMedias } from '@/lib/supabase';
 import type { TestimonialRow } from '@/lib/database.types';
 import { toast } from 'sonner';
 import PageHeader from '../PageHeader';
+import PhotoUploader from '../PhotoUploader';
+import VideoInput from '../VideoInput';
 
-const vide = { nom: '', ville: '', citation: '', note: 5, ordre: 0, publie: false };
+const vide = {
+  nom: '',
+  ville: '',
+  citation: '',
+  note: 5,
+  ordre: 0,
+  publie: false,
+  photo: '',
+  photos: [] as string[],
+  video: '',
+};
 type Brouillon = typeof vide;
 
 export default function TestimonialsList() {
@@ -50,6 +62,9 @@ export default function TestimonialsList() {
       note: v.note,
       ordre: v.ordre,
       publie: v.publie,
+      photo: v.photo || null,
+      photos: v.photos,
+      video: v.video || null,
     };
     const { error } = edite.id
       ? await supabase.from('testimonials').update(payload).eq('id', edite.id)
@@ -82,6 +97,8 @@ export default function TestimonialsList() {
       toast.error('La suppression a échoué.');
       return;
     }
+    // Libère portrait, photos jointes et vidéo téléversée.
+    await deleteMedias([row.photo, row.video, ...(row.photos ?? [])].filter((u): u is string => Boolean(u)));
     setRows(rs => rs.filter(r => r.id !== row.id));
     toast.success('Témoignage supprimé.');
   };
@@ -166,6 +183,9 @@ export default function TestimonialsList() {
                           note: row.note,
                           ordre: row.ordre,
                           publie: row.publie,
+                          photo: row.photo ?? '',
+                          photos: row.photos ?? [],
+                          video: row.video ?? '',
                         },
                       })
                     }
@@ -245,6 +265,45 @@ function Editeur({
           value={valeurs.citation}
           onChange={e => set('citation', e.target.value)}
           placeholder="Ce que le client a dit de son expérience…"
+        />
+      </div>
+
+      <div className="mt-5 grid gap-5 lg:grid-cols-2">
+        <div>
+          <Label>Portrait du client</Label>
+          <p className="mb-2 text-xs text-muted-foreground">
+            Sans portrait, l'initiale du nom s'affiche dans un cercle.
+          </p>
+          <PhotoUploader
+            photos={valeurs.photo ? [valeurs.photo] : []}
+            onChange={p => set('photo', p[0] ?? '')}
+            folder="temoignages"
+            single
+          />
+        </div>
+        <div>
+          <Label>Photos jointes</Label>
+          <p className="mb-2 text-xs text-muted-foreground">
+            Captures WhatsApp, photos du terrain envoyées par le client.
+          </p>
+          <PhotoUploader
+            photos={valeurs.photos}
+            onChange={p => set('photos', p)}
+            folder="temoignages"
+          />
+        </div>
+      </div>
+
+      <div className="mt-5">
+        <Label>Vidéo du témoignage</Label>
+        <p className="mb-2 text-xs text-muted-foreground">
+          Lien YouTube/Facebook, ou vidéo courte reçue par WhatsApp.
+        </p>
+        <VideoInput
+          videos={valeurs.video ? [valeurs.video] : []}
+          onChange={v => set('video', v[0] ?? '')}
+          folder="temoignages-videos"
+          single
         />
       </div>
 

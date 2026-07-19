@@ -1,9 +1,10 @@
 import { useRef, useState } from 'react';
 import { Upload, X, Loader2, GripVertical, AlertCircle } from 'lucide-react';
 import { supabase, mediaUrl } from '@/lib/supabase';
+import { compressImage, formatTaille } from '@/lib/compressImage';
 import { Button } from '@/components/ui/button';
 
-const MAX_MB = 8;
+const MAX_MB = 25; // avant compression ; les photos sont réduites automatiquement
 
 interface PhotoUploaderProps {
   photos: string[];
@@ -18,13 +19,16 @@ export default function PhotoUploader({ photos, onChange, folder = 'biens', sing
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
 
   const handleFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
     setError(null);
+    setInfo(null);
     setUploading(true);
 
     const uploaded: string[] = [];
+    let gagne = 0;
     for (const file of Array.from(files)) {
       if (!file.type.startsWith('image/')) {
         setError('Seules les images sont acceptées.');
@@ -34,11 +38,17 @@ export default function PhotoUploader({ photos, onChange, folder = 'biens', sing
         setError(`« ${file.name} » dépasse ${MAX_MB} Mo. Réduisez la photo puis réessayez.`);
         continue;
       }
-      const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg';
+      const optimise = await compressImage(file);
+      if (optimise.size < file.size) {
+        gagne += file.size - optimise.size;
+      }
+
+      const ext = optimise.name.split('.').pop()?.toLowerCase() ?? 'jpg';
       const path = `${folder}/${crypto.randomUUID()}.${ext}`;
-      const { error: upErr } = await supabase.storage.from('medias').upload(path, file, {
+      const { error: upErr } = await supabase.storage.from('medias').upload(path, optimise, {
         cacheControl: '31536000',
         upsert: false,
+        contentType: optimise.type,
       });
       if (upErr) {
         setError("L'envoi a échoué. Vérifiez votre connexion et réessayez.");
@@ -48,6 +58,7 @@ export default function PhotoUploader({ photos, onChange, folder = 'biens', sing
     }
 
     setUploading(false);
+    if (gagne > 0) setInfo(`Photos optimisées — ${formatTaille(gagne)} économisés.`);
     if (uploaded.length) onChange(single ? uploaded.slice(0, 1) : [...photos, ...uploaded]);
     if (inputRef.current) inputRef.current.value = '';
   };
@@ -132,6 +143,8 @@ export default function PhotoUploader({ photos, onChange, folder = 'biens', sing
           La première photo sert de vignette sur le site.
         </p>
       )}
+
+      {info && !error && <p className="text-xs text-success">{info}</p>}
 
       {error && (
         <p role="alert" className="flex items-start gap-2 text-sm text-error">

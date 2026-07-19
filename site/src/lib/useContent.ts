@@ -39,6 +39,9 @@ export interface Temoignage {
   ville: string;
   citation: string;
   note: number;
+  photo: string | null;
+  photos: string[];
+  video: string | null;
 }
 
 export interface Membre {
@@ -50,9 +53,9 @@ export interface Membre {
 
 /** Avis provisoires livrés avec le site, remplacés dès qu'un vrai témoignage est publié. */
 const TEMOIGNAGES_SECOURS: Temoignage[] = [
-  { nom: 'Kouamé A.', ville: 'Abidjan', note: 5, citation: "Grâce à 2C, j'ai acheté mon terrain à Azaguié en toute sérénité. La documentation était complète et l'accompagnement irréprochable." },
-  { nom: 'Fatou D.', ville: 'Bingerville', note: 5, citation: "Le programme briques à crédit m'a permis de commencer ma construction sans attendre d'avoir tout le budget. Merci à l'équipe !" },
-  { nom: 'Jean-Marc K.', ville: 'Cocody', note: 5, citation: "Professionnels, transparents et toujours disponibles. Je recommande Ivoire Challenge Corporation à tous ceux qui veulent investir dans l'immobilier." },
+  { nom: 'Kouamé A.', ville: 'Abidjan', note: 5, photo: null, photos: [], video: null, citation: "Grâce à 2C, j'ai acheté mon terrain à Azaguié en toute sérénité. La documentation était complète et l'accompagnement irréprochable." },
+  { nom: 'Fatou D.', ville: 'Bingerville', note: 5, photo: null, photos: [], video: null, citation: "Le programme briques à crédit m'a permis de commencer ma construction sans attendre d'avoir tout le budget. Merci à l'équipe !" },
+  { nom: 'Jean-Marc K.', ville: 'Cocody', note: 5, photo: null, photos: [], video: null, citation: "Professionnels, transparents et toujours disponibles. Je recommande Ivoire Challenge Corporation à tous ceux qui veulent investir dans l'immobilier." },
 ];
 
 const EQUIPE_SECOURS: Membre[] = [
@@ -64,7 +67,15 @@ const EQUIPE_SECOURS: Membre[] = [
 export function useTestimonials(): { items: Temoignage[]; loading: boolean } {
   const { items, loading } = usePublished<TestimonialRow | Temoignage>('testimonials', TEMOIGNAGES_SECOURS);
   return {
-    items: items.map(t => ({ nom: t.nom, ville: t.ville, citation: t.citation, note: t.note })),
+    items: items.map(t => ({
+      nom: t.nom,
+      ville: t.ville,
+      citation: t.citation,
+      note: t.note,
+      photo: t.photo ?? null,
+      photos: ('photos' in t && t.photos) || [],
+      video: ('video' in t && t.video) || null,
+    })),
     loading,
   };
 }

@@ -8,6 +8,7 @@ import Seo from '@/components/Seo';
 import { budgetRanges, type Property } from '@/data/properties';
 import { useProperties } from '@/lib/useProperties';
 import { useTestimonials } from '@/lib/useContent';
+import VideoPlayer from '@/components/VideoPlayer';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const HERO_IMG = '/images/hero-terrain.webp';
@@ -286,10 +287,41 @@ function TestimonialsSection() {
                   />
                 ))}
               </div>
+              {t.video && <VideoPlayer url={t.video} titre={`Témoignage de ${t.nom}`} className="mb-5" />}
+
               <p className="text-sm text-muted-foreground leading-relaxed mb-6">"{t.citation}"</p>
+
+              {t.photos.length > 0 && (
+                <div className="mb-6 flex gap-2 overflow-x-auto pb-1">
+                  {t.photos.map((src, k) => (
+                    <a
+                      key={src + k}
+                      href={src}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-shrink-0"
+                      aria-label={`Agrandir la photo ${k + 1} du témoignage de ${t.nom}`}
+                    >
+                      <img
+                        src={src}
+                        alt=""
+                        width={112}
+                        height={80}
+                        loading="lazy"
+                        className="h-20 w-28 rounded-lg border border-border object-cover transition-opacity hover:opacity-80"
+                      />
+                    </a>
+                  ))}
+                </div>
+              )}
+
               <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
-                  {t.nom.charAt(0)}
+                <div className="h-12 w-12 overflow-hidden rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
+                  {t.photo ? (
+                    <img src={t.photo} alt="" width={96} height={96} loading="lazy" className="h-full w-full object-cover" />
+                  ) : (
+                    t.nom.charAt(0)
+                  )}
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-foreground">{t.nom}</p>
