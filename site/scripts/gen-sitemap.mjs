@@ -19,9 +19,17 @@ const staticPages = [
   { path: '/confidentialite', priority: '0.2', changefreq: 'yearly' },
 ];
 
-// Biens : IDs extraits de src/data/properties.ts (source unique de vérité)
+// Biens : slugs dérivés des noms, alignés sur ceux enregistrés en base.
+// Note : les biens créés depuis l'administration ne sont pas connus au build ;
+// pour un sitemap exhaustif il faudra le générer depuis Supabase (à faire quand
+// le catalogue sera majoritairement géré via le CMS).
+const slugify = s =>
+  s.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+   .replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase();
+
 const data = readFileSync(resolve(root, 'src/data/properties.ts'), 'utf8');
-const ids = [...data.matchAll(/id:\s*'([^']+)'/g)].map(m => m[1]);
+const ids = [...data.matchAll(/nom:\s*'((?:[^'\\]|\\.)*)'/g)]
+  .map(m => slugify(m[1].replace(/\\'/g, "'")));
 
 const urls = [
   ...staticPages.map(p => ({ loc: BASE + p.path, priority: p.priority, changefreq: p.changefreq })),

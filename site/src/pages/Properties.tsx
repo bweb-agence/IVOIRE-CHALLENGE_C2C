@@ -2,15 +2,19 @@ import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Search, X, ArrowUpDown } from 'lucide-react';
+import { Search, X, ArrowUpDown, Loader2 } from 'lucide-react';
 import PropertyCard from '@/components/PropertyCard';
 import Seo from '@/components/Seo';
-import { properties, villes, budgetRanges, priceInRange } from '@/data/properties';
+import { budgetRanges, priceInRange } from '@/data/properties';
+import { useProperties } from '@/lib/useProperties';
 
 const HERO_IMG = '/images/terrain-angre.webp';
 const ITEMS_PER_PAGE = 9;
 
 export default function Properties() {
+  const { properties, loading } = useProperties();
+  const villes = [...new Set(properties.map(p => p.ville))].sort();
+
   // Les filtres vivent dans l'URL : recherche partageable (WhatsApp) et bouton retour fiable.
   const [searchParams, setSearchParams] = useSearchParams();
   const type = searchParams.get('type') || '';
@@ -42,7 +46,7 @@ export default function Properties() {
     if (tri === 'prix-asc') list.sort((a, b) => a.prix - b.prix);
     else if (tri === 'prix-desc') list.sort((a, b) => b.prix - a.prix);
     return list;
-  }, [type, transaction, ville, budget, tri]);
+  }, [properties, type, transaction, ville, budget, tri]);
 
   const totalPages = Math.ceil(results.length / ITEMS_PER_PAGE);
   const paginated = results.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
@@ -113,8 +117,14 @@ export default function Properties() {
         {/* Compteur + reset */}
         <div className="mb-8 flex items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            <span className="font-semibold text-foreground">{results.length}</span>{' '}
-            {results.length > 1 ? 'biens trouvés' : 'bien trouvé'}
+            {loading ? (
+              'Chargement des biens…'
+            ) : (
+              <>
+                <span className="font-semibold text-foreground">{results.length}</span>{' '}
+                {results.length > 1 ? 'biens trouvés' : 'bien trouvé'}
+              </>
+            )}
           </p>
           {hasFilters && (
             <Button variant="ghost" size="sm" onClick={clearFilters} className="rounded-full text-muted-foreground">
@@ -124,7 +134,12 @@ export default function Properties() {
         </div>
 
         {/* Results */}
-        {paginated.length > 0 ? (
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <span className="sr-only">Chargement des biens…</span>
+          </div>
+        ) : paginated.length > 0 ? (
           <>
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {paginated.map(p => <PropertyCard key={p.id} property={p} />)}

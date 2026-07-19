@@ -5,19 +5,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { MessageCircle, Search, ShieldCheck, CreditCard, Factory, Users, GraduationCap, Star, ArrowRight, CheckCircle2, Landmark, MapPin, ArrowUpRight } from 'lucide-react';
 import PropertyCard from '@/components/PropertyCard';
 import Seo from '@/components/Seo';
-import { properties, villes, budgetRanges } from '@/data/properties';
+import { budgetRanges, type Property } from '@/data/properties';
+import { useProperties } from '@/lib/useProperties';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const HERO_IMG = '/images/hero-terrain.webp';
 const BRICKS_IMG = '/images/briques.webp';
 
 export default function Home() {
+  const { properties } = useProperties();
+
   return (
     <>
       <Seo title="Ivoire Challenge Corporation (2C) — De locataire à propriétaire, sans se ruiner" />
       <HeroSection />
-      <SearchBar />
-      <FeaturedProperties />
+      <SearchBar properties={properties} />
+      <FeaturedProperties properties={properties} />
       <ServicesSection />
       <WhyUsSection />
       <TestimonialsSection />
@@ -122,8 +125,9 @@ function HeroSection() {
   );
 }
 
-function SearchBar() {
+function SearchBar({ properties }: { properties: Property[] }) {
   const navigate = useNavigate();
+  const villes = [...new Set(properties.map(p => p.ville))].sort();
   const [type, setType] = useState('');
   const [ville, setVille] = useState('');
   const [budget, setBudget] = useState('');
@@ -167,7 +171,7 @@ function SearchBar() {
   );
 }
 
-function FeaturedProperties() {
+function FeaturedProperties({ properties }: { properties: Property[] }) {
   const featured = properties.filter(p => p.aLaUne).slice(0, 3);
   return (
     <section className="container mx-auto px-4 lg:px-8 py-20">

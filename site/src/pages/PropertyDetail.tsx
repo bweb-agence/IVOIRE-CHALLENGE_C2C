@@ -1,18 +1,30 @@
 import { useParams, Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, MapPin, Maximize2, FileText, CreditCard, Navigation, MessageCircle, Info } from 'lucide-react';
+import { ArrowLeft, MapPin, Maximize2, FileText, CreditCard, Navigation, MessageCircle, Info, Loader2 } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
 import Seo from '@/components/Seo';
 import Gallery from '@/components/Gallery';
 import MapEmbed from '@/components/MapEmbed';
 import PropertyCard from '@/components/PropertyCard';
-import { properties, formatPrice, FRAIS_DOSSIER } from '@/data/properties';
+import { formatPrice, FRAIS_DOSSIER } from '@/data/properties';
+import { useProperties, findProperty } from '@/lib/useProperties';
 import { SITE_URL, SITE_NAME } from '@/lib/seo';
 
 export default function PropertyDetail() {
   const { id } = useParams();
-  const property = properties.find(p => p.id === id);
+  const { properties, loading } = useProperties();
+  const property = findProperty(properties, id);
+
+  // Ne pas annoncer « introuvable » tant que les biens n'ont pas fini de charger.
+  if (loading) {
+    return (
+      <div className="pt-32 flex justify-center py-24">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <span className="sr-only">Chargement du bien…</span>
+      </div>
+    );
+  }
 
   if (!property) {
     return (
