@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from './AuthContext';
+import { ADMIN_LOGIN } from './adminPath';
 
 /** Bloque l'accès aux routes admin tant que l'utilisateur n'est pas connecté.
  *  Note : la vraie protection des données est assurée par les règles RLS côté
@@ -19,7 +20,7 @@ export default function RequireAuth() {
   }
 
   if (!session) {
-    return <Navigate to="/admin/login" replace state={{ from: location.pathname }} />;
+    return <Navigate to={ADMIN_LOGIN} replace state={{ from: location.pathname }} />;
   }
 
   return <Outlet />;

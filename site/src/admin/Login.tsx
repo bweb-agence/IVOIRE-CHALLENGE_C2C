@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Loader2, LogIn, AlertCircle } from 'lucide-react';
 import { useAuth } from './AuthContext';
+import { ADMIN_BASE } from './adminPath';
 import { isSupabaseConfigured } from '@/lib/supabase';
 
 const LOGO = '/images/logo.png';
@@ -19,7 +20,7 @@ export default function Login() {
 
   if (loading) return null;
   if (session) {
-    const from = (location.state as { from?: string } | null)?.from ?? '/admin';
+    const from = (location.state as { from?: string } | null)?.from ?? ADMIN_BASE;
     return <Navigate to={from} replace />;
   }
 

@@ -14,6 +14,7 @@ import ActualiteDetail from '@/pages/ActualiteDetail';
 import NotFound from '@/pages/NotFound';
 
 // Administration
+import { ADMIN_BASE, ADMIN_LOGIN } from '@/admin/adminPath';
 import { AuthProvider } from '@/admin/AuthContext';
 import RequireAuth from '@/admin/RequireAuth';
 import AdminLayout from '@/admin/AdminLayout';
@@ -45,10 +46,10 @@ export default function App() {
             <Route path="*" element={<NotFound />} />
           </Route>
 
-          {/* Administration */}
-          <Route path="/admin/login" element={<Login />} />
+          {/* Administration — chemin défini par VITE_ADMIN_PATH (cf. adminPath.ts) */}
+          <Route path={ADMIN_LOGIN} element={<Login />} />
           <Route element={<RequireAuth />}>
-            <Route path="/admin" element={<AdminLayout />}>
+            <Route path={ADMIN_BASE} element={<AdminLayout />}>
               <Route index element={<PropertiesList />} />
               <Route path="biens/nouveau" element={<PropertyForm />} />
               <Route path="biens/:id" element={<PropertyForm />} />

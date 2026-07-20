@@ -7,6 +7,7 @@ import { supabase, deleteMedias } from '@/lib/supabase';
 import type { PropertyRow } from '@/lib/database.types';
 import { toast } from 'sonner';
 import PageHeader from '../PageHeader';
+import { ADMIN_BASE } from '../adminPath';
 
 const formatPrice = (p: number) => new Intl.NumberFormat('fr-FR').format(p) + ' FCFA';
 
@@ -74,7 +75,7 @@ export default function PropertiesList() {
         subtitle={loading ? 'Chargement…' : `${rows.length} bien${rows.length > 1 ? 's' : ''} au total`}
         action={
           <Button asChild>
-            <Link to="/admin/biens/nouveau">
+            <Link to={`${ADMIN_BASE}/biens/nouveau`}>
               <Plus className="mr-2 h-4 w-4" /> Ajouter un bien
             </Link>
           </Button>
@@ -143,7 +144,7 @@ export default function PropertiesList() {
                   {row.publie ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4 text-muted-foreground" />}
                 </Button>
                 <Button variant="ghost" size="sm" asChild aria-label={`Modifier ${row.nom}`}>
-                  <Link to={`/admin/biens/${row.id}`}>
+                  <Link to={`${ADMIN_BASE}/biens/${row.id}`}>
                     <Pencil className="h-4 w-4" />
                   </Link>
                 </Button>
@@ -192,7 +193,7 @@ function EmptyState({ hasQuery }: { hasQuery: boolean }) {
             Ajoutez votre premier bien pour qu'il apparaisse sur le site.
           </p>
           <Button asChild className="mt-6">
-            <Link to="/admin/biens/nouveau">
+            <Link to={`${ADMIN_BASE}/biens/nouveau`}>
               <Plus className="mr-2 h-4 w-4" /> Ajouter un bien
             </Link>
           </Button>

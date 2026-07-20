@@ -3,15 +3,16 @@ import { Link, NavLink, Outlet } from 'react-router-dom';
 import { Building2, Megaphone, Quote, Users, Inbox, LogOut, Menu, X, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from './AuthContext';
+import { ADMIN_BASE } from './adminPath';
 
 const LOGO = '/images/logo.png';
 
 const navItems = [
-  { to: '/admin', end: true, label: 'Biens', icon: Building2 },
-  { to: '/admin/actualites', label: 'Actualités', icon: Megaphone },
-  { to: '/admin/temoignages', label: 'Témoignages', icon: Quote },
-  { to: '/admin/equipe', label: 'Équipe', icon: Users },
-  { to: '/admin/demandes', label: 'Demandes', icon: Inbox },
+  { to: ADMIN_BASE, end: true, label: 'Biens', icon: Building2 },
+  { to: `${ADMIN_BASE}/actualites`, label: 'Actualités', icon: Megaphone },
+  { to: `${ADMIN_BASE}/temoignages`, label: 'Témoignages', icon: Quote },
+  { to: `${ADMIN_BASE}/equipe`, label: 'Équipe', icon: Users },
+  { to: `${ADMIN_BASE}/demandes`, label: 'Demandes', icon: Inbox },
 ];
 
 export default function AdminLayout() {
@@ -45,7 +46,7 @@ export default function AdminLayout() {
     <div className="min-h-dvh bg-muted/30">
       {/* Barre supérieure mobile */}
       <header className="lg:hidden sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-background px-4">
-        <Link to="/admin" className="flex items-center gap-2">
+        <Link to={ADMIN_BASE} className="flex items-center gap-2">
           <img src={LOGO} alt="" width={176} height={165} className="h-8 w-auto" />
           <span className="text-sm font-semibold">Administration</span>
         </Link>
@@ -69,7 +70,7 @@ export default function AdminLayout() {
       <div className="flex">
         {/* Barre latérale desktop */}
         <aside className="hidden lg:flex fixed inset-y-0 left-0 w-64 flex-col border-r border-border bg-background p-5">
-          <Link to="/admin" className="flex items-center gap-3 px-1">
+          <Link to={ADMIN_BASE} className="flex items-center gap-3 px-1">
             <img src={LOGO} alt="Ivoire Challenge Corporation" width={176} height={165} className="h-10 w-auto" />
             <span className="text-sm font-bold leading-tight">
               Administration

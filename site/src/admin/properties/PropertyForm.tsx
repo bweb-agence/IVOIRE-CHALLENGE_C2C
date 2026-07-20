@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import PhotoUploader from '../PhotoUploader';
 import VideoInput from '../VideoInput';
 import PageHeader from '../PageHeader';
+import { ADMIN_BASE } from '../adminPath';
 
 const empty = {
   nom: '',
@@ -64,7 +65,7 @@ export default function PropertyForm() {
         setLoading(false);
         if (error || !data) {
           toast.error('Ce bien est introuvable.');
-          navigate('/admin', { replace: true });
+          navigate(ADMIN_BASE, { replace: true });
           return;
         }
         const r = data as PropertyRow;
@@ -148,7 +149,7 @@ export default function PropertyForm() {
     }
 
     toast.success(isNew ? 'Bien créé.' : 'Modifications enregistrées.');
-    navigate('/admin');
+    navigate(ADMIN_BASE);
   };
 
   if (loading) {
@@ -162,7 +163,7 @@ export default function PropertyForm() {
   return (
     <form onSubmit={handleSubmit}>
       <Button asChild variant="ghost" size="sm" className="-ml-2 mb-4 text-muted-foreground">
-        <Link to="/admin">
+        <Link to={ADMIN_BASE}>
           <ArrowLeft className="mr-2 h-4 w-4" /> Retour aux biens
         </Link>
       </Button>
@@ -347,7 +348,7 @@ export default function PropertyForm() {
 
       <div className="sticky bottom-0 mt-8 flex justify-end gap-3 border-t border-border bg-muted/30 py-4 backdrop-blur">
         <Button asChild variant="ghost" type="button">
-          <Link to="/admin">Annuler</Link>
+          <Link to={ADMIN_BASE}>Annuler</Link>
         </Button>
         <Button type="submit" disabled={saving}>
           {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
