@@ -28,7 +28,7 @@ const empty = {
   modalites_paiement: '',
   site_approuve: true,
   a_la_une: false,
-  publie: true,
+  publie: false,
   photos: [] as string[],
   videos: [] as string[],
 };

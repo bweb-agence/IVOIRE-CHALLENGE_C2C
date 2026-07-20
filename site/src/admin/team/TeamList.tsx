@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import PageHeader from '../PageHeader';
 import PhotoUploader from '../PhotoUploader';
 
-const vide = { nom: '', fonction: '', initiales: '', photo: '', ordre: 0, publie: true };
+const vide = { nom: '', fonction: '', initiales: '', photo: '', ordre: 0, publie: false };
 type Brouillon = typeof vide;
 
 /** Initiales par défaut (« Awa Traoré » → « AT ») si l'utilisateur n'en saisit pas. */
