@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Loader2, Megaphone, Trash2, Eye, EyeOff, Save, X, Pencil } from 'lucide-react';
+import { Plus, Loader2, Megaphone, Trash2, Eye, EyeOff, Save, X, Pencil, AlertCircle, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -136,6 +136,34 @@ export default function AnnouncementsList() {
         />
       )}
 
+      {/* La rubrique publique n'existe que s'il y a du contenu publié :
+          on l'explique plutôt que de laisser l'utilisateur chercher. */}
+      {!loading && rows.length > 0 && publiees === 0 && (
+        <div className="mb-5 flex items-start gap-3 rounded-xl border border-warning/30 bg-warning-bg/70 p-4">
+          <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-warning" />
+          <div>
+            <p className="text-sm font-semibold text-foreground">
+              Rien n'est visible sur le site pour l'instant
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {rows.length === 1 ? 'Votre actualité est' : 'Vos actualités sont'} en brouillon. Cliquez sur l'icône
+              en forme d'œil pour {rows.length === 1 ? 'la' : 'les'} publier — la rubrique « Actualités » apparaîtra
+              alors dans le menu du site.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {!loading && publiees > 0 && (
+        <div className="mb-5">
+          <Button asChild variant="outline" size="sm">
+            <a href="/actualites" target="_blank" rel="noopener noreferrer">
+              <ExternalLink className="mr-2 h-4 w-4" /> Voir la rubrique sur le site
+            </a>
+          </Button>
+        </div>
+      )}
+
       {loading ? (
         <div className="flex justify-center py-16">
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -145,8 +173,8 @@ export default function AnnouncementsList() {
           <Megaphone className="mx-auto mb-4 h-10 w-10 text-muted-foreground" />
           <p className="font-medium text-foreground">Aucune actualité.</p>
           <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
-            Promotions, nouveaux lotissements, annonces de l'agence. La rubrique « Actualités » n'apparaît sur le site
-            que lorsqu'au moins une actualité est publiée.
+            Promotions, nouveaux lotissements, annonces de l'agence. Créez-en une, puis cochez
+            « Publier sur le site » : la rubrique « Actualités » apparaîtra alors dans le menu.
           </p>
         </div>
       ) : (
